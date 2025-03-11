@@ -14,15 +14,20 @@ class User extends Authenticatable
     protected $primaryKey = 'user_uuid';
     public $incrementing = false;
     protected $keyType = 'string';
-    public $timestamps = true; 
+    public $timestamps = true;
 
     protected $fillable = [
         'user_uuid',
         'first_name',
+        'second_name',
         'last_name',
+        'second_lastname',
         'email',
         'phone',
+        'dui',
         'document',
+        'country_data',
+        'two_factor_key',
         'password',
     ];
 
