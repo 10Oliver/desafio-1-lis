@@ -1,11 +1,14 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
-use App\Http\Controllers\AuthController; 
+use App\Http\Controllers\AuthController;
 
-Route::get('/', function() {
-    return view('dashboard');
-})->name('dashboard');
+Route::middleware('auth')->group(function () {
+    Route::get('/', function() {
+        return view('dashboard');
+    })->name('dashboard');
+});
+
 
 Route::get('/login', function () {
     return view('login');
