@@ -15,12 +15,10 @@ class AuthController extends Controller
             'password' => ['required'],
         ]);
 
-        //return redirect()->intended('');
-
         if (Auth::attempt($credentials)) {
             $request->session()->regenerate();
 
-            return redirect()->intended('dashboard');
+            return redirect()->intended('/');
         }
 
         return back()->withErrors([
