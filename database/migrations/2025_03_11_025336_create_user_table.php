@@ -12,7 +12,7 @@ return new class extends Migration
             $table->uuid('user_uuid')->primary();
             $table->string('first_name', 50);
             $table->string('second_name', 50)->nullable();
-            $table->string('last_name', 50);
+            $table->string('lastname', 50);
             $table->string('second_lastname', 50)->nullable();
             $table->string('dui',10)->nullable();
             $table->string('document')->nullable();
