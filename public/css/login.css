@@ -1,0 +1,187 @@
+* {
+    margin: 0;
+    padding: 0;
+}
+
+body {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 100vw;
+    height: 100vh;
+    margin: 0;
+    padding: 0;
+    background-color: #1f2227;
+}
+
+.login-container {
+    width: 325px;
+    border-radius: 10px;
+    border: 1px solid #909cf1;
+    padding: 40px;
+}
+
+.login-form {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.login-form > form {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    gap: 20px 0px
+}
+
+.login-title {
+    font-size: 24px;
+    color: #cfd0f3;
+    font-weight: bold;
+}
+
+.input-field {
+    position: relative;
+}
+
+.input-field > input {
+    border-radius: 15px;
+    border-top: 0px;
+    border-bottom: 1px;
+    border-left: 1px;
+    border-right: 1px;
+    border-style: solid;
+    border-color: #cfd0f3;
+    padding: 10px 18px;
+    width: calc(100% - 38px);
+    color: #cfd0f3;
+    background-color: transparent;
+    outline: none;
+    z-index: 2;
+    position: relative;
+}
+
+.input-field >input::placeholder {
+    visibility: hidden !important;
+    color: transparent;
+}
+
+.first-border {
+    position: absolute;
+    height: calc(100% - 2px);
+    width: 14px;
+    left: 0px;
+    top: 0px;
+    border-top: 1px;
+    border-left: 1px;
+    border-bottom: 0px;
+    border-right: 0px;
+    border-style: solid;
+    border-color: #cfd0f3;
+    border-radius: 15px 0px 0px 15px;
+}
+
+.last-border {
+    position: absolute;
+    height: calc(100% - 2px);
+    width: calc(100% - 15px);
+    right: 0px;
+    top: 0px;
+    border-top: 1px;
+    border-right: 1px;
+    border-bottom: 0px;
+    border-left: 0px;
+    border-radius: 0px 15px 15px 0px;
+    border-style: solid;
+    border-color: #cfd0f3;
+    transition: all 0.3s ease;
+}
+
+.input-field > label {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    left: 18px;
+    transition: top 0.3s ease, font-size 0.3s ease;
+    pointer-events: none;
+    color: #5c608a;
+}
+
+.input-field > input:focus ~ label,
+.input-field > input:not(:placeholder-shown) ~ label {
+    top: 0px !important;
+    font-size: 12px;
+    color: #a0a2cc;
+}
+
+.password-input-field > input:focus ~ .last-border,
+.password-input-field > input:not(:placeholder-shown) ~ .last-border {
+    width: calc(100% - 88px);
+}
+
+/* .login-container {
+    background-color: #0e133b;
+    padding: 40px;
+    border-radius: 15px;
+    width: 300px;
+}
+
+
+
+.login-form {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.login-form > form {
+    width: 100%;
+}
+
+.login-form > p {
+    margin: 15px 0px;
+    font-size: 14px;
+    color: #cfd0f3;
+}
+
+.input-field {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    margin-bottom: 5px;
+    position: relative;
+    padding: 15px 0px;
+}
+
+.input-field > label {
+    position: absolute;
+    top: 15px;
+    transition: top 0.3s ease, font-size 0.3s ease;
+    color: #5c608a;
+}
+
+.input-field > input {
+    background-color: transparent;
+    border: none;
+    border-bottom: 2px solid #5c608a;
+    outline: none;
+    padding: 5px 0px;
+    color: #cfd0f3;
+}
+
+.input-field > input:focus + label {
+    top: -5px !important;
+    font-size: 12px;
+    color: #a0a2cc;
+}
+
+.input-field > input:focus {
+    border-color: #a0a2cc;
+}
+
+.submit-button {
+    padding: 12px 40px;
+    border-radius: 50px;
+    margin: 0px 5%;
+    margin-top: 20px;
+} */
