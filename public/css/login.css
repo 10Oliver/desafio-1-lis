@@ -1,6 +1,9 @@
+@import url("https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600&display=swap");
+
 * {
     margin: 0;
     padding: 0;
+    font-family: "Poppins", sans-serif;
 }
 
 body {
@@ -12,36 +15,58 @@ body {
     margin: 0;
     padding: 0;
     background-color: #1f2227;
+    background-image: url("../resources/images/login-wallpaper.jpg");
+    background-position: center;
+    background-repeat: no-repeat;
+    background-size: cover;
 }
 
 .login-container {
-    width: 325px;
+    width: 305px;
     border-radius: 10px;
-    border: 1px solid #909cf1;
+    border: 1px solid white;
     padding: 40px;
+    box-shadow: 0px 0px 5px white;
+    position: relative;
+    overflow: hidden;
 }
 
 .login-form {
     display: flex;
     flex-direction: column;
     align-items: center;
+    z-index: 2;
+}
+
+.shadow {
+    position: absolute;
+    height: 100%;
+    width: 100%;
+    background-color: #ffffff10;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
 }
 
 .login-form > form {
     width: 100%;
     display: flex;
     flex-direction: column;
-    gap: 20px 0px
 }
 
 .login-title {
     font-size: 24px;
     color: #cfd0f3;
     font-weight: bold;
+    margin-bottom: 35px;
 }
 
 .input-field {
     position: relative;
+    width: 100%;
+    box-sizing: border-box;
+    margin: 15px 0px;
 }
 
 .input-field > input {
@@ -61,7 +86,7 @@ body {
     position: relative;
 }
 
-.input-field >input::placeholder {
+.input-field > input::placeholder {
     visibility: hidden !important;
     color: transparent;
 }
@@ -104,84 +129,54 @@ body {
     left: 18px;
     transition: top 0.3s ease, font-size 0.3s ease;
     pointer-events: none;
-    color: #5c608a;
+    color: #cfd0f3;
+}
+
+.input-field > input:focus {
+    border-color: white;
 }
 
 .input-field > input:focus ~ label,
 .input-field > input:not(:placeholder-shown) ~ label {
     top: 0px !important;
     font-size: 12px;
-    color: #a0a2cc;
+    color: white;
+}
+
+.email-input-field > input:focus ~ .last-border,
+.email-input-field > input:not(:placeholder-shown) ~ .last-border {
+    width: calc(100% - 7ch);
+    border-color: white;
 }
 
 .password-input-field > input:focus ~ .last-border,
 .password-input-field > input:not(:placeholder-shown) ~ .last-border {
-    width: calc(100% - 88px);
-}
-
-/* .login-container {
-    background-color: #0e133b;
-    padding: 40px;
-    border-radius: 15px;
-    width: 300px;
-}
-
-
-
-.login-form {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-}
-
-.login-form > form {
-    width: 100%;
-}
-
-.login-form > p {
-    margin: 15px 0px;
-    font-size: 14px;
-    color: #cfd0f3;
-}
-
-.input-field {
-    display: flex;
-    flex-direction: column;
-    gap: 10px;
-    margin-bottom: 5px;
-    position: relative;
-    padding: 15px 0px;
-}
-
-.input-field > label {
-    position: absolute;
-    top: 15px;
-    transition: top 0.3s ease, font-size 0.3s ease;
-    color: #5c608a;
-}
-
-.input-field > input {
-    background-color: transparent;
-    border: none;
-    border-bottom: 2px solid #5c608a;
-    outline: none;
-    padding: 5px 0px;
-    color: #cfd0f3;
-}
-
-.input-field > input:focus + label {
-    top: -5px !important;
-    font-size: 12px;
-    color: #a0a2cc;
-}
-
-.input-field > input:focus {
-    border-color: #a0a2cc;
+    width: calc(100% - 9.5ch);
+    border-color: white;
 }
 
 .submit-button {
-    padding: 12px 40px;
-    border-radius: 50px;
-    margin: 0px 5%;
-    margin-top: 20px;
-} */
+    padding: 10px 0px;
+    border-radius: 20px;
+    margin: 20px 0px;
+}
+
+.register-text {
+    display: flex;
+    color: white;
+    font-size: 14px;
+    margin-top: -10px;
+}
+
+.register-text > a {
+    text-decoration: none;
+    font-weight: 600;
+    margin-left: 5px;
+    color: white !important;
+}
+
+.error-message {
+    font-size: 14px;
+    font-weight: 400;
+    color: #cfd0f3;
+}
