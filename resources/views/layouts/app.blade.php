@@ -9,7 +9,12 @@
 </head>
 
 <body>
-    <aside class="sidebar">
+    <navbar class="mobile-navbar">
+        <span class="material-symbols-outlined" id="navbar-menu-button">
+            menu
+        </span>
+    </navbar>
+    <aside class="sidebar" id="sidebar-menu">
         <div class="user-sidebar">
             <img src="{{ asset('resources/images/user-layout.png') }}" alt="">
         </div>
@@ -66,5 +71,5 @@
         @yield('content')
     </main>
 </body>
-
+<script src="{{ asset('js/layout.js') }}"></script>
 </html>
