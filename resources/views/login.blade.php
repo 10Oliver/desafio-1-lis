@@ -5,6 +5,8 @@
     <meta charset="UTF-8">
     <title>Inicio de Sesión</title>
     <link rel="stylesheet" href="{{ asset('css/login.css') }}">
+    <link rel="stylesheet"
+        href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" />
 </head>
 
 <body>
@@ -19,12 +21,18 @@
                     <div class="first-border"></div>
                     <div class="last-border"></div>
                     <label for="email">Usuario</label>
+                    <span class="material-symbols-outlined">
+                        account_circle
+                    </span>
                 </div>
                 <div class="input-field password-input-field">
                     <input type="password" id="password" name="password" required placeholder="Contraseña">
                     <div class="first-border"></div>
                     <div class="last-border"></div>
                     <label for="password">Contraseña</label>
+                    <span class="material-symbols-outlined">
+                        lock
+                    </span>
                 </div>
                 <div class="error-message">
                     @if ($errors->any())
@@ -36,7 +44,7 @@
                 <button type="submit" class="submit-button">Iniciar sesión</button>
                 <div class="register-text">
                     <p>¿Aún no tienes cuenta?</p>
-                    <a href="">Registrate</a>
+                    <a href="{{ route('register') }}">Registrate</a>
                 </div>
             </form>
         </div>
