@@ -1,13 +1,70 @@
 <!DOCTYPE html>
 <html lang="es">
+
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Administrador</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="{{ asset('css/app.css') }}">
+    <title>Administrador</title>
 </head>
+
 <body>
-  <main>
-    @yield('content')
-  </main>
+    <aside class="sidebar">
+        <div class="user-sidebar">
+            <img src="{{ asset('resources/images/user-layout.png') }}" alt="">
+        </div>
+        <div class="navigation-bar">
+            <div class="sidebar-icon">
+                <span class="material-symbols-outlined">
+                    dashboard
+                </span>
+                <p>Panel</p>
+            </div>
+            <div class="sidebar-icon">
+                <span class="material-symbols-outlined">
+                    savings
+                </span>
+                <p>Entrada</p>
+            </div>
+
+            <div class="sidebar-icon">
+                <span class="material-symbols-outlined">
+                    point_of_sale
+                </span>
+                <p>Salida</p>
+            </div>
+
+            <div class="sidebar-icon">
+                <span class="material-symbols-outlined">
+                    account_balance
+                </span>
+                <p>Cuentas</p>
+            </div>
+
+            <div class="sidebar-icon">
+                <span class="material-symbols-outlined">
+                    bookmarks
+                </span>
+                <p>Categorías</p>
+            </div>
+            <div class="sidebar-icon">
+                <span class="material-symbols-outlined">
+                    account_box
+                </span>
+                <p>Perfil</p>
+            </div>
+        </div>
+
+        <div class="sidebar-icon logout-icon">
+            <span class="material-symbols-outlined">
+                logout
+            </span>
+            <p>Cerrar sesión</p>
+        </div>
+    </aside>
+    <main class="main-layout">
+        @yield('content')
+    </main>
 </body>
+
 </html>
