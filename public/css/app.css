@@ -1,0 +1,146 @@
+@import url("https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600&display=swap");
+@import url("https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200");
+
+* {
+    margin: 0;
+    padding: 0;
+    font-family: "Poppins", sans-serif;
+}
+
+body {
+    width: 100vw;
+    height: 100vh;
+    background-color: #1f2227;
+    display: flex;
+    position: relative;
+}
+
+.sidebar {
+    height: 100%;
+    width: 75px;
+    background-color: #15191c;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    transition: all .5s ease-in-out;
+    overflow-x: hidden;
+    position: relative;
+}
+
+.sidebar:hover {
+    width: 250px;
+}
+
+.navigation-bar {
+    display: flex;
+    flex-direction: column;
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 100%;
+    margin-top: 20px;
+}
+
+.sidebar-icon {
+    position: relative;
+    width: 100%;
+    transition: all .3s ease-in-out;
+}
+
+.sidebar-icon:hover {
+    background-color: #2b4997;
+    cursor: pointer;
+    border-top-right-radius: 5px;
+    border-bottom-right-radius: 5px;
+}
+
+.sidebar-icon:hover > span {
+    color: white;
+}
+
+.sidebar-icon:hover > p {
+    color: white;
+}
+
+.sidebar-icon > span {
+    font-size: 40px;
+    width: 100%;
+    padding: 10px 0px;
+    text-align: center;
+    max-width: 75px;
+    color: #434a50;
+}
+
+.sidebar-icon > p {
+    font-size: 16px;
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    left: 75px;
+    white-space: nowrap;
+    color: #434a50;
+}
+
+.logout-icon:hover {
+    background-color: #862424;
+}
+
+.main-layout {
+    padding: 5% 10%;
+    overflow: hidden;
+}
+
+.user-sidebar {
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    margin-top: 20px;
+}
+
+.user-sidebar > img {
+    width: 60%;
+    max-width: 180px;
+}
+
+.mobile-navbar {
+    display: none;
+    width: calc(100% - 40px);
+    height: 75px;
+    background-color: #15191c;
+    padding: 0px 20px;
+}
+
+.mobile-navbar > span {
+    color: #999ea2;
+    font-size: 30px;
+}
+
+.mobile-navbar > span:hover {
+    cursor: pointer;
+}
+
+.active-sidebar {
+    width: 60% !important;
+}
+
+@media (max-width: 720px) {
+    body {
+        flex-direction: column;
+    }
+
+    .mobile-navbar {
+        display: flex;
+        align-items: center;
+        justify-content: start;
+    }
+    .main-layout {
+        width: 90%;
+        padding: 5% !important;
+    }
+
+    .sidebar {
+        position: fixed !important;
+        max-height: 100vh !important;
+        width: 0px;
+    }
+}
