@@ -12,15 +12,17 @@ return new class extends Migration
             $table->uuid('expense_uuid')->primary();
             $table->string('name', 100);
             $table->uuid('expense_type_uuid');
+            $table->decimal('amount', 10, 2);
+            @$table->date('date');
             $table->string('ticket_path', 255)->nullable();
             $table->text('description')->nullable();
             $table->timestamps();
             $table->softDeletes();
 
             $table->foreign('expense_type_uuid')
-                  ->references('expense_type_uuid')
-                  ->on('expense_type')
-                  ->onDelete('cascade');
+                ->references('expense_type_uuid')
+                ->on('expense_type')
+                ->onDelete('cascade');
         });
     }
 
