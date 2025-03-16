@@ -59,25 +59,30 @@ class AuthController extends Controller
         if (!empty($data['password'])) {
             $data['password'] = Hash::make($data['password']);
         }
-        $countryId = $data['country_data'];
-        // Get country json
-        $response = Http::get("https://restcountries.com/v3.1/alpha/{$countryId}", []);
+        if (isset($data['country_data'])) {
+            $countryId = $data['country_data'];
+            // Get country json
+            $response = Http::get("https://restcountries.com/v3.1/alpha/{$countryId}", []);
 
-        if ($response->successful()) {
-            $country = $response->json()[0];
+            if ($response->successful()) {
+                $country = $response->json()[0];
 
-            $countryData = [
-                'name' => $country['translations']['spa']['common'] ?? null,
-                'code' => $country['cca3'] ?? null,
-                'flag' => $country['flags']['svg'] ?? $country['flags']['png'] ?? null,
-            ];
+                $countryData = [
+                    'name' => $country['translations']['spa']['common'] ?? null,
+                    'code' => $country['cca3'] ?? null,
+                    'flag' => $country['flags']['svg'] ?? $country['flags']['png'] ?? null,
+                ];
 
-            $data['country_data'] = json_encode($countryData);
+                $data['country_data'] = json_encode($countryData);
+            }
         }
 
         $data = array_filter($data, fn($value) => $value !== '');
         User::create($data);
 
-        return redirect()->route('login')->with('success', 'Usuario registrado exitosamente. ¡Inicia sesión!');
+        session()->flash('success', '¡Registro exitoso!');
+
+        // Redirige a la ruta de login, cambiando la URL
+        return redirect()->route('login');
     }
 }

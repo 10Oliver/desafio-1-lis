@@ -10,6 +10,12 @@
 </head>
 
 <body>
+    @if (session('success'))
+        <div class="success-register-toast">
+            ¡Registro completado!
+        </div>
+    @endif
+
     <div class="login-container">
         <div class="shadow"></div>
         <div class="login-form">
