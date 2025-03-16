@@ -10,28 +10,35 @@
 </head>
 
 <body>
-    <form class="register-container" autocomplete="off">
+    <form class="register-container" method="POST" action="{{ route('register.process') }}" autocomplete="off">
+        @csrf
         <div class="shadow"></div>
         <div id="sponsor"></div>
         <div id="personal-info">
             <h4 class="register-title">Información personal</h4>
             <div class="input-field first-name-field">
-                <input type="text" id="name" name="name" required placeholder="Primer nombre...">
+                <input type="text" id="first_name" name="first_name" required placeholder="Primer nombre...">
                 <div class="first-border"></div>
                 <div class="last-border"></div>
-                <label for="name">Primer nombre</label>
+                <label for="first_name">Primer nombre</label>
                 <span class="material-symbols-outlined">
                     face
                 </span>
+                @error('first_name')
+                    <small class="error-message">{{ $message }}</small>
+                @enderror
             </div>
             <div class="input-field second-name-field">
-                <input type="text" id="second_name" name="second_name" required placeholder="Segundo nombre...">
+                <input type="text" id="second_name" name="second_name" placeholder="Segundo nombre...">
                 <div class="first-border"></div>
                 <div class="last-border"></div>
                 <label for="second_name">Segundo nombre</label>
                 <span class="material-symbols-outlined">
                     face
                 </span>
+                @error('second_name')
+                    <small class="error-message">{{ $message }}</small>
+                @enderror
             </div>
             <div class="input-field first-name-field">
                 <input type="text" id="lastname" name="lastname" required placeholder="Primer apellido">
@@ -41,16 +48,21 @@
                 <span class="material-symbols-outlined">
                     face
                 </span>
+                @error('lastname')
+                    <small class="error-message">{{ $message }}</small>
+                @enderror
             </div>
             <div class="input-field second-name-field">
-                <input type="text" id="second_lastname" name="second_lastname" required
-                    placeholder="Segundo apellido">
+                <input type="text" id="second_lastname" name="second_lastname" placeholder="Segundo apellido">
                 <div class="first-border"></div>
                 <div class="last-border"></div>
                 <label for="second_lastname">Segundo apellido</label>
                 <span class="material-symbols-outlined">
                     face
                 </span>
+                @error('second-name')
+                    <small class="error-message">{{ $message }}</small>
+                @enderror
             </div>
 
             <div class="input-field country-field">
@@ -65,6 +77,9 @@
                 <span class="material-symbols-outlined">
                     flag_circle
                 </span>
+                @error('nationality')
+                    <small class="error-message">{{ $message }}</small>
+                @enderror
             </div>
             <hr>
             <!-- National (DUI) -->
@@ -76,6 +91,9 @@
                 <span class="material-symbols-outlined">
                     badge
                 </span>
+                @error('dui')
+                    <small class="error-message">{{ $message }}</small>
+                @enderror
             </div>
             <!-- International (Passport and country) -->
             <div class="input-field document-field hide" id="document">
@@ -86,11 +104,17 @@
                 <span class="material-symbols-outlined">
                     badge
                 </span>
+                @error('document')
+                    <small class="error-message">{{ $message }}</small>
+                @enderror
             </div>
             <div class="input-field country-data-field hide" id="country_data">
                 <Select placeholder="Nacionalidad" id="country_data" name="country_data">
                     <option value="" disabled selected></option>
-                    <option value="1">Nacional</option>
+                    @foreach ($countries as $country)
+                        <option value="{{ $country['id'] }}"> {{ $country['name'] }}</option>
+                    @endforeach
+
                     <option value="2">Extranjero</option>
                 </Select>
                 <div class="first-border"></div>
@@ -99,7 +123,11 @@
                 <span class="material-symbols-outlined">
                     flag
                 </span>
+                @error('country-data')
+                    <small class="error-message">{{ $message }}</small>
+                @enderror
             </div>
+            <a id="return-button" href="{{ route('login') }}" type="button" class="navigation-button">Regresar</a>
             <button id="next-step" type="button" class="navigation-button">Continuar</button>
         </div>
         <div id="contact-info">
@@ -112,6 +140,9 @@
                 <span class="material-symbols-outlined">
                     call
                 </span>
+                @error('phone')
+                    <small class="error-message">{{ $message }}</small>
+                @enderror
             </div>
             <div class="input-field email-field">
                 <input type="email" id="email" name="email" required placeholder="Correo">
@@ -121,25 +152,34 @@
                 <span class="material-symbols-outlined">
                     mail
                 </span>
+                @error('email')
+                    <small class="error-message">{{ $message }}</small>
+                @enderror
             </div>
             <div class="input-field password-field">
-                <input type="email" id="password" name="password" required placeholder="Contraseña">
+                <input type="password" id="password" name="password" required placeholder="Contraseña">
                 <div class="first-border"></div>
                 <div class="last-border"></div>
                 <label for="password">Contraseña</label>
                 <span class="material-symbols-outlined">
                     pin
                 </span>
+                @error('password')
+                    <small class="error-message">{{ $message }}</small>
+                @enderror
             </div>
             <div class="input-field confirm-password-field">
-                <input type="email" id="confirm_password" name="confirm_password" required
+                <input type="password" id="password_confirmation" name="password_confirmation" required
                     placeholder="Contraseña">
                 <div class="first-border"></div>
                 <div class="last-border"></div>
-                <label for="confirm_password">Confirmar contraseña</label>
+                <label for="password_confirmation">Confirmar contraseña</label>
                 <span class="material-symbols-outlined">
                     pin
                 </span>
+                @error('password_confirmation')
+                    <small class="error-message">{{ $message }}</small>
+                @enderror
             </div>
             <button id="back-step" type="button" class="navigation-button">Regresar</button>
             <button id="finish" type="submit" class="navigation-button">Finalizar</button>

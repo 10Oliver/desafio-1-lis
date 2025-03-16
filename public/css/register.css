@@ -219,6 +219,7 @@ hr {
     background-color: transparent;
     color: white;
     border: 1px solid white;
+    text-decoration: none !important;
 }
 
 .navigation-button:hover {
@@ -309,4 +310,12 @@ hr {
 .confirm-password-field > input:not(:placeholder-shown) ~ .last-border {
     width: calc(100% - 16ch);
     border-color: white;
+}
+
+.error-message {
+    position: absolute;
+    color: rgb(255, 0, 0) !important;
+    font-size: 13px !important;
+    bottom: -22px;
+    left: 10px;
 }
