@@ -10,7 +10,8 @@
 </head>
 
 <body>
-    <form class="register-container" method="POST" action="{{ route('register.process') }}" autocomplete="off">
+    <form class="register-container" id="register-form" method="POST" action="{{ route('register.process') }}"
+        autocomplete="off">
         @csrf
         <div class="shadow"></div>
         <div id="sponsor"></div>

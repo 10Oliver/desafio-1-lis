@@ -27,7 +27,7 @@ class RegisterRequest extends FormRequest
             'lastname' => 'required|string|min:3|max:255',
             'second_lastname' => 'nullable|string|min:3|max:255',
             'email' => 'required|email|unique:user,email',
-            'phone' => 'required|regex:/^\d{8}$/',
+            'phone' => 'required',
             'nationality' => 'required',
             'dui' => [
                 'nullable',
@@ -62,7 +62,6 @@ class RegisterRequest extends FormRequest
             'email.unique' => 'Ya está registrado.',
 
             'phone.required' => 'Campo obligatorio.',
-            'phone.regex' => 'Debe tener 8 dígitos.',
 
             'nationality.required' => 'Campo obligatorio.',
 

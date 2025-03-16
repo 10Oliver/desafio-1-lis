@@ -5,6 +5,7 @@ const countryField = document.getElementById("country_data");
 const nextStep = document.getElementById("next-step");
 const backStep = document.getElementById("back-step");
 const sponsor = document.getElementById("sponsor");
+const registerForm = document.getElementById("register-form");
 
 nationalitySelect.addEventListener("change", () => {
     if (nationalitySelect.value == 1) {
@@ -34,13 +35,23 @@ nextStep.addEventListener("click", () => {
     personalInfoRequired.forEach((field) => {
         if (field.value.trim() === "") {
             valid = false;
-            field.classList.add("error");
+            if (
+                !field.nextElementSibling ||
+                !field.nextElementSibling.classList.contains("error-message")
+            ) {
+                const errorMessage = document.createElement("small");
+                errorMessage.textContent = "Campo vacío";
+                errorMessage.classList.add("error-message");
+                field.parentElement.appendChild(errorMessage);
+            }
         } else {
-            field.classList.remove("error");
+            const fieldToDelete = field.parentElement.querySelector("small");
+            if (fieldToDelete) {
+                field.parentElement.removeChild(fieldToDelete);
+            }
         }
     });
     if (!valid) {
-        alert("Existen campos vacíos");
         return;
     }
     sponsor.classList.add("second-step-sponsor");
@@ -48,4 +59,37 @@ nextStep.addEventListener("click", () => {
 
 backStep.addEventListener("click", () => {
     sponsor.classList.remove("second-step-sponsor");
+});
+
+registerForm.addEventListener("submit", (e) => {
+    e.preventDefault();
+    const personalInfoRequired = document.querySelectorAll(
+        "#contact-info [required]"
+    );
+
+    let valid = true;
+
+    personalInfoRequired.forEach((field) => {
+        if (field.value.trim() === "") {
+            valid = false;
+            if (
+                !field.nextElementSibling ||
+                !field.nextElementSibling.classList.contains("error-message")
+            ) {
+                const errorMessage = document.createElement("small");
+                errorMessage.textContent = "Campo vacío";
+                errorMessage.classList.add("error-message");
+                field.parentElement.appendChild(errorMessage);
+            }
+        } else {
+            const fieldToDelete = field.parentElement.querySelector("small");
+            if (fieldToDelete) {
+                field.parentElement.removeChild(fieldToDelete);
+            }
+        }
+    });
+    if (!valid) {
+        return;
+    }
+    registerForm.submit();
 });
