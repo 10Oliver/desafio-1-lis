@@ -13,7 +13,8 @@ class IncomeController extends Controller
     public function index()
     {
         $incomes = Income::all();
-        return view('incomes.index', compact('incomes'));
+        $incomeTypes = IncomeType::all();
+        return view('incomes.index', compact('incomes', 'incomeTypes'));
     }
 
     public function create()
