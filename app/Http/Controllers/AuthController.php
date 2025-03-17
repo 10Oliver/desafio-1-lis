@@ -113,7 +113,10 @@ class AuthController extends Controller
         $qrImage = $writer->write($qrCode);
         $qrImageBase64 = base64_encode($qrImage->getString());
 
-        $recoveryCodes = json_decode(decrypt($user->two_factor_recovery_codes), true);
+        $recoveryCodes = null;
+        if (isset($user->two_factor_recovery_codes)) {
+            $recoveryCodes = json_decode(decrypt($user->two_factor_recovery_codes), true);
+        }
 
         return view('auth.two-factor-settings', compact('qrImageBase64', 'recoveryCodes'));
     }
