@@ -8,6 +8,11 @@ use App\Http\Controllers\AccountController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\CategoryController;
 use App\Http\Controllers\ProfileController;
+use Laravel\Fortify\Http\Controllers\TwoFactorAuthenticationController;
+use Laravel\Fortify\Http\Controllers\TwoFactorQrCodeController;
+use Laravel\Fortify\Http\Controllers\TwoFactorSecretKeyController;
+use Laravel\Fortify\Http\Controllers\TwoFactorAuthenticatedSessionController;
+use Laravel\Fortify\Http\Controllers\RecoveryCodeController;
 
 Route::get('/login', function () {
     return view('login');
@@ -18,6 +23,14 @@ Route::get('/register', [AuthController::class, 'showRegister'])->name('register
 Route::post('/login', [AuthController::class, 'login'])->name('login.process');
 Route::post('/register', [AuthController::class, 'register'])->name('register.process');
 Route::post('/login', [AuthController::class, 'login'])->name('login.process');
+
+Route::get('/two-factor-challenge', function () {
+    return view('auth.two-factor-challenge');
+})->name('two-factor.login');
+
+Route::post('/two-factor-challenge', [TwoFactorAuthenticatedSessionController::class, 'store'])
+->middleware('guest')
+->name('two-factor.login');
 
 Route::middleware('auth')->group(function () {
     Route::get('/', function () {
@@ -34,4 +47,18 @@ Route::middleware('auth')->group(function () {
     Route::resource('categories', CategoryController::class);
 
     Route::get('/profile', [ProfileController::class, 'index'])->name('profile.index');
+
+    // Two factor views
+    Route::get('/two-factor-settings', [AuthController::class, 'active2FA'])->name('two-factor.settings');
+
+    // Two factor methods
+
+    Route::post('/user/two-factor-authentication', [TwoFactorAuthenticationController::class, 'store']);
+    Route::delete('/user/two-factor-authentication', [TwoFactorAuthenticationController::class, 'destroy']);
+
+    Route::get('/user/two-factor-qr-code', [TwoFactorQrCodeController::class, 'show']);
+    Route::get('/user/two-factor-secret-key', [TwoFactorSecretKeyController::class, 'show']);
+
+    Route::post('/user/two-factor-confirmation', [TwoFactorAuthenticatedSessionController::class, 'store']);
+    Route::post('/user/two-factor-recovery-codes', [RecoveryCodeController::class, 'store']);
 });

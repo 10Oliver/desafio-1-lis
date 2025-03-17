@@ -6,9 +6,11 @@ use App\Http\Requests\RegisterRequest;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
-use App\Http\Controllers\redirect;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Http;
+use Endroid\QrCode\QrCode;
+use Endroid\QrCode\Writer\PngWriter;
+use PragmaRX\Google2FA\Google2FA;
 
 class AuthController extends Controller
 {
@@ -19,9 +21,15 @@ class AuthController extends Controller
             'password' => ['required'],
         ]);
 
-        if (Auth::attempt($credentials)) {
-            $request->session()->regenerate();
+        $user = User::where('email', $credentials['email'])->first();
 
+        if ($user && Hash::check($credentials['password'], $user->password)) {
+            if ($user->two_factor_secret) {
+                $request->session()->put('login.id', $user->getAuthIdentifier());
+                return redirect()->route('two-factor.login');
+            }
+            Auth::login($user);
+            $request->session()->regenerate();
             return redirect()->intended('/');
         }
 
@@ -84,5 +92,29 @@ class AuthController extends Controller
 
         // Redirige a la ruta de login, cambiando la URL
         return redirect()->route('login');
+    }
+
+    public function active2FA()
+    {
+        $user = Auth::user();
+        $user->refresh();
+
+        $google2fa = new Google2FA();
+
+        $qrCodeUrl = $google2fa->getQRCodeUrl(
+            config('app.name'),
+            $user->email,
+            $user->two_factor_secret
+        );
+
+        $qrCode = new QrCode($qrCodeUrl);
+        $writer = new PngWriter();
+
+        $qrImage = $writer->write($qrCode);
+        $qrImageBase64 = base64_encode($qrImage->getString());
+
+        $recoveryCodes = json_decode(decrypt($user->two_factor_recovery_codes), true);
+
+        return view('auth.two-factor-settings', compact('qrImageBase64', 'recoveryCodes'));
     }
 }

@@ -6,10 +6,11 @@ use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Support\Str;
+use Laravel\Fortify\TwoFactorAuthenticatable;
 
 class User extends Authenticatable
 {
-    use Notifiable, SoftDeletes;
+    use Notifiable, SoftDeletes, TwoFactorAuthenticatable;
 
     protected $table = 'user';
     protected $primaryKey = 'user_uuid';
@@ -28,8 +29,12 @@ class User extends Authenticatable
         'dui',
         'document',
         'country_data',
-        'two_factor_key',
         'password',
+    ];
+
+    protected $casts = [
+        'two_factor_secret' => 'encrypted',
+        'two_factor_recovery_codes' => 'encrypted:array',
     ];
 
     protected static function booted()
