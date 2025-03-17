@@ -13,7 +13,7 @@ return new class extends Migration
             $table->string('name', 100);
             $table->uuid('income_type_uuid');
             $table->decimal('amount', 10, 2);
-            @$table->date('date');
+            $table->date('date');
             $table->string('ticket_path', 255)->nullable();
             $table->text('description')->nullable();
             $table->timestamps();
