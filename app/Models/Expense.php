@@ -19,6 +19,8 @@ class Expense extends Model
         'expense_uuid',
         'name',
         'expense_type_uuid',
+        'amount',
+        'date',
         'ticket_path',
         'description',
     ];

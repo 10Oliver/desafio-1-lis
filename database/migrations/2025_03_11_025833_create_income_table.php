@@ -12,15 +12,17 @@ return new class extends Migration
             $table->uuid('income_uuid')->primary();
             $table->string('name', 100);
             $table->uuid('income_type_uuid');
+            $table->decimal('amount', 10, 2);
+            $table->date('date');
             $table->string('ticket_path', 255)->nullable();
             $table->text('description')->nullable();
             $table->timestamps();
             $table->softDeletes();
 
             $table->foreign('income_type_uuid')
-                  ->references('income_type_uuid')
-                  ->on('income_type')
-                  ->onDelete('cascade');
+                ->references('income_type_uuid')
+                ->on('income_type')
+                ->onDelete('cascade');
         });
     }
 

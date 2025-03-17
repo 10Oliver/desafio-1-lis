@@ -19,6 +19,8 @@ class Income extends Model
         'income_uuid',
         'name',
         'income_type_uuid',
+        'amount',
+        'date',
         'ticket_path',
         'description',
     ];
