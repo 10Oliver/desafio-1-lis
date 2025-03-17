@@ -53,13 +53,37 @@ body {
 
 #sponsor {
     position: absolute;
-    width: 50%;
+    max-width: calc(50% - 80px);
     top: 0;
     bottom: 0;
     right: 0;
     background-color: #0c1e2c;
     z-index: 7;
     transition: all 1s cubic-bezier(0.075, 0.82, 0.165, 1);
+    color: #cfd0f3;
+    display: flex;
+    flex-direction: column;
+    padding: 40px;
+    gap: 10px 0px;
+    font-size: 16px;
+}
+
+#sponsor > h3 {
+    font-size: 30px;
+    font-weight: 700;
+    margin-bottom: 10px;
+    text-align: center;
+}
+
+#sponsor > ul {
+    margin-left: 20px;
+}
+
+#sponsor > span {
+    font-size: 20px;
+    font-weight: 700;
+    margin-top: 20px;
+    text-align: center;
 }
 
 .second-step-sponsor {

@@ -14,7 +14,20 @@
         autocomplete="off">
         @csrf
         <div class="shadow"></div>
-        <div id="sponsor"></div>
+        <div id="sponsor">
+            <h3>¡Estás a un paso de empezar!</h3>
+            <p>Solo tienes que completar el siguiente formulario con tus datos y podrás comenzar a usar la herramienta.
+            </p>
+            <p>Agrega tus movimientos, incluye los comprobantes y guarda los balances individuales de tus cuentas. ¡Todo
+                de manera fácil y rápida!</p>
+            <p><strong>¿Por qué elegirnos?</strong></p>
+            <ul>
+                <li><span>🔒 Seguridad de tus datos garantizada</span></li>
+                <li><span>📊 Análisis y reportes claros y detallados</span></li>
+                <li><span>📱 Interfaz amigable y fácil de usar</span></li>
+            </ul>
+            <span>¡Gestionar tus finanzas nunca fue tan fácil!</span>
+        </div>
         <div id="personal-info">
             <h4 class="register-title">Información personal</h4>
             <div class="input-field first-name-field">
