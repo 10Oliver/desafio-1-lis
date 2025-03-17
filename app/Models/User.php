@@ -5,6 +5,7 @@ namespace App\Models;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use Illuminate\Support\Str;
 
 class User extends Authenticatable
 {
@@ -20,7 +21,7 @@ class User extends Authenticatable
         'user_uuid',
         'first_name',
         'second_name',
-        'last_name',
+        'lastname',
         'second_lastname',
         'email',
         'phone',
@@ -31,19 +32,23 @@ class User extends Authenticatable
         'password',
     ];
 
-    // Relación 1:N con user_account
+    protected static function booted()
+    {
+        static::creating(function ($user) {
+            $user->user_uuid = (string) Str::uuid();
+        });
+    }
+
     public function userAccounts()
     {
         return $this->hasMany(UserAccount::class, 'user_uuid', 'user_uuid');
     }
 
-    // Relación 1:N con user_expense
     public function userExpenses()
     {
         return $this->hasMany(UserExpense::class, 'user_uuid', 'user_uuid');
     }
 
-    // Relación 1:N con user_income
     public function userIncomes()
     {
         return $this->hasMany(UserIncome::class, 'user_uuid', 'user_uuid');

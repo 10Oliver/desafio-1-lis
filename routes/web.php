@@ -13,6 +13,10 @@ Route::get('/login', function () {
     return view('login');
 })->name('login');
 
+Route::get('/register', [AuthController::class, 'showRegister'])->name('register');
+
+Route::post('/login', [AuthController::class, 'login'])->name('login.process');
+Route::post('/register', [AuthController::class, 'register'])->name('register.process');
 Route::post('/login', [AuthController::class, 'login'])->name('login.process');
 
 Route::middleware('auth')->group(function () {
