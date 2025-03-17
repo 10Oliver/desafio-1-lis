@@ -62,12 +62,12 @@
             </div>
         </div>
 
-        <div class="sidebar-icon logout-icon">
+        <a class="sidebar-icon logout-icon" href="{{ route('auth.logout') }}">
             <span class="material-symbols-outlined">
                 logout
             </span>
             <p>Cerrar sesión</p>
-        </div>
+        </a>
     </aside>
     <main class="main-layout">
         @yield('content')

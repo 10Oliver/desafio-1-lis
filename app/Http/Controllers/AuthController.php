@@ -120,4 +120,10 @@ class AuthController extends Controller
 
         return view('auth.two-factor-settings', compact('qrImageBase64', 'recoveryCodes'));
     }
+
+    public function logout()
+    {
+        Auth::logout();
+        return redirect('/login');
+    }
 }

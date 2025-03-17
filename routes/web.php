@@ -48,6 +48,8 @@ Route::middleware('auth')->group(function () {
 
     Route::get('/profile', [ProfileController::class, 'index'])->name('profile.index');
 
+    Route::get("/logout", [AuthController::class, 'logout'])->name('auth.logout');
+
     // Two factor views
     Route::get('/two-factor-settings', [AuthController::class, 'active2FA'])->name('two-factor.settings');
 
