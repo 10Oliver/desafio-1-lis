@@ -3,12 +3,15 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\RegisterRequest;
+use App\Http\Requests\RegisterSecondStepRequest;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use App\Http\Controllers\redirect;
+use App\Http\Requests\RegisterFirstStepRequest;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Http;
+use Illuminate\Support\Facades\Validator;
 
 class AuthController extends Controller
 {
@@ -48,6 +51,22 @@ class AuthController extends Controller
 
             return view('register', ['countries' => $result]);
         }
+    }
+
+    public function checkFirstStep(RegisterFirstStepRequest $request)
+    {
+        return response()->json([
+            'step' => 2,
+            'route' => route('register.second')
+        ]);
+    }
+
+    public function checkSecondStep(RegisterSecondStepRequest $request)
+    {
+        return response()->json([
+            'step' => 3,
+            'route' => route('register.process')
+        ]);
     }
 
     public function register(RegisterRequest $request)
