@@ -17,6 +17,8 @@ Route::get('/register', [AuthController::class, 'showRegister'])->name('register
 
 Route::post('/login', [AuthController::class, 'login'])->name('login.process');
 Route::post('/register', [AuthController::class, 'register'])->name('register.process');
+Route::post('/register-first-step', [AuthController::class, 'checkFirstStep'])->name('register.first');
+Route::post('/register-second-step', [AuthController::class, 'checkSecondStep'])->name('register.second');
 Route::post('/login', [AuthController::class, 'login'])->name('login.process');
 
 Route::middleware('auth')->group(function () {
