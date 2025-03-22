@@ -1,4 +1,3 @@
-
 @extends('layouts.app')
 
 @section('content')
@@ -20,42 +19,42 @@
     @endif
 
     <!-- Tabla de ingresos -->
-           <div class="table-responsive">
-            <table class="table table-dark table-hover rounded-lg">
-                
-                <thead class="">
-                    
-                    <tr>
-                        <th>Nombre</th>
-                        <th>Monto</th>
-                        <th>Fecha</th>
-                        <th>Tipo</th>
-                        <th>Factura</th>
-                    </tr>
-                   
-                </thead>
-                
-                <tbody class="table-group-divider">
-                    @foreach($incomes as $income)
-                    <tr>
-                         
-                        <td>{{ $income->name }}</td>
-                        <td>${{ number_format($income->amount, 2, ".", ",") }}</td>
-                        <td>{{ \Carbon\Carbon::parse($income->date)->format('d/m/Y') }}</td>
-                        <td>{{ $income->incomeType->name }}</td>
-                        <td>
-                            @if($income->ticket_path)
-                            <img src="{{ asset('storage/' . $income->ticket_path) }}" alt="Factura" width="100" style="cursor:pointer;" onclick="mostrarImagen('{{ asset('storage/' . $income->ticket_path) }}')">
-                            @else
-                            <span class="text-muted">Sin factura</span>
-                            @endif
-                        </td>
-                    </tr>
-                    @endforeach
-                </tbody>
-            </table>
-        </div>
-    
+    <div class="table-responsive">
+        <table class="table table-dark table-hover rounded-lg">
+
+            <thead class="">
+
+                <tr>
+                    <th>Nombre</th>
+                    <th>Monto</th>
+                    <th>Fecha</th>
+                    <th>Tipo</th>
+                    <th>Factura</th>
+                </tr>
+
+            </thead>
+
+            <tbody class="table-group-divider">
+                @foreach($incomes as $income)
+                <tr>
+
+                    <td>{{ $income->name }}</td>
+                    <td>${{ number_format($income->amount, 2, ".", ",") }}</td>
+                    <td>{{ \Carbon\Carbon::parse($income->date)->format('d/m/Y') }}</td>
+                    <td>{{ $income->incomeType->name }}</td>
+                    <td>
+                        @if($income->ticket_path)
+                        <img src="{{ asset('storage/' . $income->ticket_path) }}" alt="Factura" width="100" style="cursor:pointer;" onclick="mostrarImagen('{{ asset('storage/' . $income->ticket_path) }}')">
+                        @else
+                        <span class="text-muted">Sin factura</span>
+                        @endif
+                    </td>
+                </tr>
+                @endforeach
+            </tbody>
+        </table>
+    </div>
+
 
     <!-- Paginador personalizado -->
     @if($incomes->hasPages())
@@ -103,23 +102,23 @@
 
     <!-- Modal: Nuevo ingreso -->
     <div class="modal fade" id="createIncomeModal" tabindex="-1" aria-labelledby="createIncomeModalLabel" aria-hidden="true">
-        <div class="modal-dialog modal-md">
-            <div class="modal-content bg-dark text-white">
-                <div class="modal-header">
+        <div class="modal-dialog modal-md modal-dialog-centered modal-dark"> <!-- Agrega modal-dark -->
+            <div class="modal-content bg-dark text-white"> <!-- Fondo oscuro -->
+                <div class="modal-header bg-dark input-group"> <!-- Fondo oscuro y borde secundario -->
                     <h5 class="modal-title" id="createIncomeModalLabel">Nuevo Ingreso</h5>
                     <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Cerrar"></button>
                 </div>
-                <div class="modal-body">
+                <div class="modal-body bg-dark"> <!-- Fondo oscuro -->
                     <form action="{{ route('incomes.store') }}" method="POST" enctype="multipart/form-data" id="incomeForm">
                         @csrf
                         <div class="mb-3">
-                            <label for="name" class="form-label">Nombre:</label>
-                            <input type="text" name="name" id="name" class="form-control bg-secondary text-white" required>
+                            <label for="name" class="form-label bg-dark text-white">Nombre:</label>
+                            <input type="text" name="name" id="name" class="form-control bg-dark text-white border border-dark-subtle" required>
                         </div>
 
                         <div class="mb-3">
                             <label for="income_type" class="form-label">Tipo de ingreso:</label>
-                            <select name="income_type" id="income_type" class="form-select bg-secondary text-white" required>
+                            <select name="income_type" id="income_type" class="form-select bg-dark text-white" required>
                                 <option value="">Seleccione un tipo</option>
                                 @foreach($incomeTypes as $type)
                                 <option value="{{ $type->income_type_uuid }}">{{ $type->name }}</option>
@@ -129,26 +128,26 @@
 
                         <div class="mb-3">
                             <label for="amount" class="form-label">Monto:</label>
-                            <input type="number" step="0.01" name="amount" id="amount" class="form-control bg-secondary text-white" required>
+                            <input type="number" step="0.01" name="amount" id="amount" class="form-control bg-dark text-white" required>
                         </div>
 
                         <div class="mb-3">
                             <label for="date" class="form-label">Fecha:</label>
-                            <input type="date" name="date" id="date" class="form-control bg-secondary text-white" required>
+                            <input type="date" name="date" id="date" class="form-control bg-dark text-white" required>
                         </div>
 
                         <div class="mb-3">
                             <label for="ticket" class="form-label">Factura (imagen):</label>
-                            <input type="file" name="ticket" id="ticket" class="form-control bg-secondary text-white" accept="image/*">
+                            <input type="file" name="ticket" id="ticket" class="form-control bg-dark text-white" accept="image/*">
                         </div>
 
                         <div class="mb-3">
                             <label for="description" class="form-label">Descripción (opcional):</label>
-                            <textarea name="description" id="description" class="form-control bg-secondary text-white" rows="3"></textarea>
+                            <textarea name="description" id="description" class="form-control bg-dark text-white" rows="3"></textarea>
                         </div>
 
-                        <div class="modal-footer">
-                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                        <div class="modal-footer bg-dark border-dark"> <!-- Fondo oscuro y borde secundario -->
+                            <button type="button" class="btn btn-dark" data-bs-dismiss="modal">Cancelar</button>
                             <button type="submit" class="btn btn-primary">Guardar</button>
                         </div>
                     </form>
