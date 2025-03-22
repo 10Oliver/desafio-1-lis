@@ -11,6 +11,7 @@
 </head>
 
 <body>
+    
     <navbar class="mobile-navbar">
         <span class="material-symbols-outlined" id="navbar-menu-button">
             menu
