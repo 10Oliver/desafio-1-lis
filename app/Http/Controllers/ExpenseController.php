@@ -3,62 +3,52 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use App\Models\Expense;
+use App\Models\ExpenseType;
+use Illuminate\Support\Str;
+use Illuminate\Support\Facades\Storage;
 
 class ExpenseController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     */
     public function index()
     {
-        //
+        $expenses = Expense::paginate(10);
+        $expenseTypes = ExpenseType::all();
+        return view('expenses.index', compact('expenses', 'expenseTypes'));
     }
 
-    /**
-     * Show the form for creating a new resource.
-     */
     public function create()
     {
-        //
+        $expenseTypes = ExpenseType::all();
+        return view('expenses.create', compact('expenseTypes'));
     }
 
-    /**
-     * Store a newly created resource in storage.
-     */
     public function store(Request $request)
     {
-        //
-    }
+        $request->validate([
+            'name' => 'required|string|max:100',
+            'expense_type' => 'required|uuid',
+            'amount' => 'required|numeric',
+            'date' => 'required|date',
+            'ticket' => 'nullable|image|max:2048',
+            'description' => 'nullable|string',
+        ]);
 
-    /**
-     * Display the specified resource.
-     */
-    public function show(string $id)
-    {
-        //
-    }
+        $ticketPath = null;
+        if ($request->hasFile('ticket')) {
+            $ticketPath = $request->file('ticket')->store('tickets', 'public');
+        }
 
-    /**
-     * Show the form for editing the specified resource.
-     */
-    public function edit(string $id)
-    {
-        //
-    }
+        Expense::create([
+            'expense_uuid'      => Str::uuid(),
+            'name'              => $request->name,
+            'expense_type_uuid' => $request->expense_type,
+            'amount'            => $request->amount,
+            'date'              => $request->date,
+            'ticket_path'       => $ticketPath,
+            'description'       => $request->description,
+        ]);
 
-    /**
-     * Update the specified resource in storage.
-     */
-    public function update(Request $request, string $id)
-    {
-        //
-    }
-
-    /**
-     * Remove the specified resource from storage.
-     */
-    public function destroy(string $id)
-    {
-        //
+        return redirect()->route('expenses.index')->with('success', 'Salida registrada correctamente.');
     }
 }
