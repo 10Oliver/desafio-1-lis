@@ -8,6 +8,7 @@ use App\Http\Controllers\AccountController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\CategoryController;
 use App\Http\Controllers\ProfileController;
+use Illuminate\Support\Facades\Auth;
 
 Route::get('/login', function () {
     return view('login');
@@ -20,11 +21,17 @@ Route::post('/register', [AuthController::class, 'register'])->name('register.pr
 Route::post('/register-first-step', [AuthController::class, 'checkFirstStep'])->name('register.first');
 Route::post('/register-second-step', [AuthController::class, 'checkSecondStep'])->name('register.second');
 Route::post('/login', [AuthController::class, 'login'])->name('login.process');
+Route::post('/logout', function () {
+    Auth::logout();
+    return redirect()->route('login');
+})->name('logout');
 
 Route::middleware('auth')->group(function () {
-    Route::get('/', function () {
+    /* Route::get('/', function () {
         return view('dashboard');
     })->name('dashboard');
+*/
+Route::get('/', [DashboardController::class, 'showReport'])->name('dashboard');
 
 
     Route::resource('incomes', IncomeController::class);

@@ -20,9 +20,7 @@
     <!-- Tabla de ingresos -->
     <div class="table-responsive">
         <table class="table table-dark table-hover rounded-lg">
-
             <thead class="">
-
                 <tr>
                     <th>Nombre</th>
                     <th>Monto</th>

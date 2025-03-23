@@ -22,57 +22,57 @@
             <img src="{{ asset('resources/images/user-layout.png') }}" alt="">
         </div>
         <div class="navigation-bar">
-            <div class="sidebar-icon">
-                <span class="material-symbols-outlined">
-                    dashboard
-                </span>
-                <p>Panel</p>
-            </div>
-            <div class="sidebar-icon">
-                <span class="material-symbols-outlined">
-                    savings
-                </span>
+            
+
+             <a href="{{ route('incomes.index') }}" class="sidebar-icon">
+                <span class="material-symbols-outlined">savings</span>
                 <p>Entrada</p>
-            </div>
+             </a>
 
-            <div class="sidebar-icon">
-                <span class="material-symbols-outlined">
-                    point_of_sale
-                </span>
-                <p>Salida</p>
-            </div>
+             <a href="{{ route('expenses.index') }}" class="sidebar-icon">
+                 <span class="material-symbols-outlined">point_of_sale</span>
+                 <p>Salida</p>
+             </a>
 
-            <div class="sidebar-icon">
-                <span class="material-symbols-outlined">
-                    account_balance
-                </span>
+             <a href="{{ route('dashboard') }}" class="sidebar-icon">
+                <span class="material-symbols-outlined">dashboard</span>
+                <p>Panel</p>
+             </a>
+
+             <a href="{{ route('accounts.index') }}" class="sidebar-icon">
+                <span class="material-symbols-outlined">account_balance</span>
                 <p>Cuentas</p>
-            </div>
+             </a>
 
-            <div class="sidebar-icon">
-                <span class="material-symbols-outlined">
-                    bookmarks
-                </span>
-                <p>Categorías</p>
-            </div>
-            <div class="sidebar-icon">
-                <span class="material-symbols-outlined">
-                    account_box
-                </span>
-                <p>Perfil</p>
-            </div>
+
+             <a href="{{ route('categories.index') }}" class="sidebar-icon">
+                 <span class="material-symbols-outlined">bookmarks</span>
+                 <p>Categorías</p>
+             </a>
+
+             <a href="{{ route('profile.index') }}" class="sidebar-icon">
+                 <span class="material-symbols-outlined">account_box</span>
+                 <p>Perfil</p>
+             </a>
         </div>
 
-        <div class="sidebar-icon logout-icon">
-            <span class="material-symbols-outlined">
-                logout
-            </span>
-            <p>Cerrar sesión</p>
+        <div>
+            <form action="{{ route('logout') }}" method="POST" class="sidebar-icon logout-icon" style="margin: 0; padding: 0;">
+             @csrf
+                <button type="submit" style="all: unset; width: 100%; height: 60px; display: flex; align-items: center; justify-content: flex-start; gap: 0;">
+                 <span class="material-symbols-outlined">logout</span>
+                    <p class="logout-label">Cerrar sesión</p>
+                </button>
+            </form>
+
         </div>
+
+        
     </aside>
     <main class="main-layout">
         @yield('content')
     </main>
+
 </body>
 <script src="{{ asset('js/layout.js') }}"></script>
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0/dist/js/bootstrap.bundle.min.js"></script>
