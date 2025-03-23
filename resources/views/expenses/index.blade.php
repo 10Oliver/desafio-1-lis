@@ -39,11 +39,10 @@
                     <td>
                         @if($expense->ticket_path)
                         <img src="{{ asset('storage/' . $expense->ticket_path) }}"
-                             alt="Factura"
-                             width="100"
-                             height="100"
-                             style="cursor:pointer;"
-                             onclick="mostrarImagen('{{ asset('storage/' . $expense->ticket_path) }}')">
+     class="thumbnail-img"
+     style="max-height: 50px; cursor: pointer;"
+     alt="Factura de gasto">
+
                         @else
                         <span class="text-muted">Sin factura</span>
                         @endif
@@ -163,23 +162,24 @@
         </div>
     </div>
 
-    <!-- Modal Factura-->
-    <div class="modal fade" id="modalImagen" tabindex="-1" aria-hidden="true">
-        <div class="modal-dialog modal-dialog-centered">
-            <div class="modal-content bg-transparent border-0">
-                <div class="modal-body p-0">
-                    <img id="imagenAmpliada" src="" class="img-fluid" alt="Factura">
-                </div>
-            </div>
-        </div>
+    <!-- Modal para mostrar imagen en grande -->
+<div class="modal fade" id="imageModal" tabindex="-1" aria-labelledby="imageModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-lg modal-dialog-centered">
+    <div class="modal-content bg-dark">
+      <div class="modal-body text-center">
+        <img id="modalImage" src="" class="img-fluid" alt="Factura en grande">
+      </div>
     </div>
-
-    <script>
-        function mostrarImagen(src) {
-            const modalImagen = new bootstrap.Modal(document.getElementById('modalImagen'));
-            document.getElementById('imagenAmpliada').src = src;
-            modalImagen.show();
-        }
-    </script>
+  </div>
 </div>
+
+<script>
+    document.querySelectorAll('.thumbnail-img').forEach(img => {
+        img.addEventListener('click', function () {
+            document.getElementById('modalImage').src = this.src;
+            new bootstrap.Modal(document.getElementById('imageModal')).show();
+        });
+    });
+</script>
+
 @endsection
