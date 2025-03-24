@@ -146,6 +146,7 @@
                                 <button type="button" class="btn btn-dark" data-bs-dismiss="modal">Cancelar</button>
                                 <button type="submit" class="btn btn-primary">Guardar</button>
                             </div>
+                        </div>
                     </form>
 
                     @if ($errors->any())
