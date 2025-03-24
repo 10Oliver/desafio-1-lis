@@ -18,6 +18,7 @@ class Account extends Model
     protected $fillable = [
         'account_uuid',
         'name',
+        'amount',
         'account_type_uuid',
     ];
 
