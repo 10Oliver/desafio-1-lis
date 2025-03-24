@@ -35,6 +35,7 @@ class User extends Authenticatable
     protected $casts = [
         'two_factor_secret' => 'encrypted',
         'two_factor_recovery_codes' => 'encrypted:array',
+        'country_data' => 'array'
     ];
 
     protected static function booted()

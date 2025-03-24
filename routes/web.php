@@ -56,6 +56,11 @@ Route::get('/', [DashboardController::class, 'showReport'])->name('dashboard');
     Route::resource('categories', CategoryController::class);
 
     Route::get('/profile', [ProfileController::class, 'index'])->name('profile.index');
+    Route::get('/profile/edit', [ProfileController::class, 'editIndex'])->name('profile.edit');
+    Route::post('/profile/edit', [ProfileController::class, 'updateUserData'])->name('profile.edit');
+
+    Route::get('/profile/change-password', [ProfileController::class, 'showPasswordView'])->name('profile.changePassword');
+    Route::get('/profile/two-factor', [ProfileController::class, 'showTwoFactor'])->name('profile.twoFactor');
 
     Route::get("/logout", [AuthController::class, 'logout'])->name('auth.logout');
 
