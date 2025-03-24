@@ -10,6 +10,9 @@
 </head>
 
 <body>
+    <div class="background-wallpaper"></div>
+    <input value="{{ route('register.first') }}" id="first" style="display: none;">
+    <input value="{{ route('register.second') }}" id="second" style="display: none;">
     <form class="register-container" id="register-form" method="POST" action="{{ route('register.process') }}"
         autocomplete="off">
         @csrf
@@ -38,9 +41,6 @@
                 <span class="material-symbols-outlined">
                     face
                 </span>
-                @error('first_name')
-                    <small class="error-message">{{ $message }}</small>
-                @enderror
             </div>
             <div class="input-field second-name-field">
                 <input type="text" id="second_name" name="second_name" placeholder="Segundo nombre...">
@@ -50,9 +50,6 @@
                 <span class="material-symbols-outlined">
                     face
                 </span>
-                @error('second_name')
-                    <small class="error-message">{{ $message }}</small>
-                @enderror
             </div>
             <div class="input-field first-name-field">
                 <input type="text" id="lastname" name="lastname" required placeholder="Primer apellido">
@@ -62,9 +59,6 @@
                 <span class="material-symbols-outlined">
                     face
                 </span>
-                @error('lastname')
-                    <small class="error-message">{{ $message }}</small>
-                @enderror
             </div>
             <div class="input-field second-name-field">
                 <input type="text" id="second_lastname" name="second_lastname" placeholder="Segundo apellido">
@@ -74,9 +68,6 @@
                 <span class="material-symbols-outlined">
                     face
                 </span>
-                @error('second-name')
-                    <small class="error-message">{{ $message }}</small>
-                @enderror
             </div>
 
             <div class="input-field country-field">
@@ -91,9 +82,6 @@
                 <span class="material-symbols-outlined">
                     flag_circle
                 </span>
-                @error('nationality')
-                    <small class="error-message">{{ $message }}</small>
-                @enderror
             </div>
             <hr>
             <!-- National (DUI) -->
@@ -105,9 +93,6 @@
                 <span class="material-symbols-outlined">
                     badge
                 </span>
-                @error('dui')
-                    <small class="error-message">{{ $message }}</small>
-                @enderror
             </div>
             <!-- International (Passport and country) -->
             <div class="input-field document-field hide" id="document">
@@ -118,9 +103,6 @@
                 <span class="material-symbols-outlined">
                     badge
                 </span>
-                @error('document')
-                    <small class="error-message">{{ $message }}</small>
-                @enderror
             </div>
             <div class="input-field country-data-field hide" id="country_data">
                 <Select placeholder="Nacionalidad" id="country_data" name="country_data">
@@ -137,12 +119,11 @@
                 <span class="material-symbols-outlined">
                     flag
                 </span>
-                @error('country-data')
-                    <small class="error-message">{{ $message }}</small>
-                @enderror
             </div>
-            <a id="return-button" href="{{ route('login') }}" type="button" class="navigation-button">Regresar</a>
-            <button id="next-step" type="button" class="navigation-button">Continuar</button>
+            <a id="return-button" href="{{ route('login') }}" type="button" class="navigation-button back-button">
+                <span>Regresar</span>
+            </a>
+            <button id="next-step" type="button" class="navigation-button move-button">Continuar</button>
         </div>
         <div id="contact-info">
             <h4 class="register-title">Acceso y contacto</h4>
@@ -154,9 +135,6 @@
                 <span class="material-symbols-outlined">
                     call
                 </span>
-                @error('phone')
-                    <small class="error-message">{{ $message }}</small>
-                @enderror
             </div>
             <div class="input-field email-field">
                 <input type="email" id="email" name="email" required placeholder="Correo">
@@ -166,9 +144,6 @@
                 <span class="material-symbols-outlined">
                     mail
                 </span>
-                @error('email')
-                    <small class="error-message">{{ $message }}</small>
-                @enderror
             </div>
             <div class="input-field password-field">
                 <input type="password" id="password" name="password" required placeholder="Contraseña">
@@ -178,9 +153,6 @@
                 <span class="material-symbols-outlined">
                     pin
                 </span>
-                @error('password')
-                    <small class="error-message">{{ $message }}</small>
-                @enderror
             </div>
             <div class="input-field confirm-password-field">
                 <input type="password" id="password_confirmation" name="password_confirmation" required
@@ -191,12 +163,9 @@
                 <span class="material-symbols-outlined">
                     pin
                 </span>
-                @error('password_confirmation')
-                    <small class="error-message">{{ $message }}</small>
-                @enderror
             </div>
-            <button id="back-step" type="button" class="navigation-button">Regresar</button>
-            <button id="finish" type="submit" class="navigation-button">Finalizar</button>
+            <button id="back-step" type="button" class="navigation-button move-button">Regresar</button>
+            <button id="finish" type="submit" class="navigation-button register-button">Finalizar</button>
         </div>
     </form>
 

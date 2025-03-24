@@ -6,7 +6,7 @@ use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Contracts\Validation\Validator;
 use Illuminate\Http\Exceptions\HttpResponseException;
 
-class RegisterRequest extends FormRequest
+class RegisterFirstStepRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -28,8 +28,6 @@ class RegisterRequest extends FormRequest
             'second_name' => 'nullable|string|min:3|max:255',
             'lastname' => 'required|string|min:3|max:255',
             'second_lastname' => 'nullable|string|min:3|max:255',
-            'email' => 'required|email|unique:user,email',
-            'phone' => 'required',
             'nationality' => 'required',
             'dui' => [
                 'nullable',
@@ -38,7 +36,6 @@ class RegisterRequest extends FormRequest
             ],
             'document' => 'nullable|required_if:nationality,2|string|max:50',
             'country_data' => 'nullable|required_if:nationality,2|string',
-            'password' => 'required|string|min:8|confirmed',
         ];
     }
 
@@ -68,7 +65,7 @@ class RegisterRequest extends FormRequest
             'nationality.required' => 'Campo obligatorio.',
 
             'dui.required_if' => 'Campo obligatorio si es nacional.',
-            'dui.regex' => 'Formato inválido.',
+            'dui.regex' => 'Formato inválido. (00000000-0)',
 
             'document.required_if' => 'Campo obligatorio.',
             'document.max' => 'Máximo 50 caracteres.',

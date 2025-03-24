@@ -15,7 +15,7 @@
             ¡Registro completado!
         </div>
     @endif
-
+    <div class="background-wallpaper"></div>
     <div class="login-container">
         <div class="shadow"></div>
         <div class="login-form">

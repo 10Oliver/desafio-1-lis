@@ -1,7 +1,7 @@
 module.exports = {
-    plugins: {
-      tailwindcss: {},
-      autoprefixer: {},
+    content: ["./public/**/*.html", "./public/**/*.js", "./public/**/*.vue"],
+    theme: {
+        extend: {},
     },
-  }
-  
+    plugins: [],
+};

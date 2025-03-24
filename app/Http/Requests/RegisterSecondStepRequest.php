@@ -5,8 +5,9 @@ namespace App\Http\Requests;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Contracts\Validation\Validator;
 use Illuminate\Http\Exceptions\HttpResponseException;
+use Illuminate\Validation\Rules\Password;
 
-class RegisterRequest extends FormRequest
+class RegisterSecondStepRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -24,21 +25,9 @@ class RegisterRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'first_name' => 'required|string|min:3|max:255',
-            'second_name' => 'nullable|string|min:3|max:255',
-            'lastname' => 'required|string|min:3|max:255',
-            'second_lastname' => 'nullable|string|min:3|max:255',
             'email' => 'required|email|unique:user,email',
-            'phone' => 'required',
-            'nationality' => 'required',
-            'dui' => [
-                'nullable',
-                'required_if:nationality,1',
-                'regex:/^\d{8}-\d{1}$/'
-            ],
-            'document' => 'nullable|required_if:nationality,2|string|max:50',
-            'country_data' => 'nullable|required_if:nationality,2|string',
-            'password' => 'required|string|min:8|confirmed',
+            'phone' => 'required|numeric|max:250',
+            'password' => ['required', 'confirmed', 'regex:/^(?=.*[a-z])(?=.*[A-Z]).+$/', Password::min(8)->numbers()->symbols()->uncompromised()],
         ];
     }
 
@@ -64,11 +53,14 @@ class RegisterRequest extends FormRequest
             'email.unique' => 'Ya está registrado.',
 
             'phone.required' => 'Campo obligatorio.',
+            'phone.regex' => 'Formato incorrecto (0000-0000)',
+            'phone.numeric' => 'Solo se permiten números',
+            'phone.max' => 'Máximo 250 caracteres',
 
             'nationality.required' => 'Campo obligatorio.',
 
             'dui.required_if' => 'Campo obligatorio si es nacional.',
-            'dui.regex' => 'Formato inválido.',
+            'dui.regex' => 'Formato inválido. (00000000-0)',
 
             'document.required_if' => 'Campo obligatorio.',
             'document.max' => 'Máximo 50 caracteres.',
@@ -79,7 +71,19 @@ class RegisterRequest extends FormRequest
             'password.required' => 'Campo obligatorio.',
             'password.min' => 'Mínimo 8 caracteres.',
             'password.confirmed' => 'Las contraseñas no coinciden.',
+
+            'password.regex' => 'Debe incluir mayúsculas y minúsculas.',
+            'password.numbers' => 'Debe incluir al menos 1 número.',
+            'password.symbols' => 'Debe incluir al menos 1 símbolo.',
+            'password.uncompromised' => 'Contraseña comprometida, intenta otra.',
         ];
+    }
+
+    public function withValidator($validator)
+    {
+        $validator->sometimes('phone', ['regex:/^\d{4}-\d{4}$/'], function ($input) {
+            return $input->nationality == 1;
+        });
     }
 
     protected function failedValidation(Validator $validator)

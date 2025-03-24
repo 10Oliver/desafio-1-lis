@@ -13,6 +13,7 @@ use Laravel\Fortify\Http\Controllers\TwoFactorQrCodeController;
 use Laravel\Fortify\Http\Controllers\TwoFactorSecretKeyController;
 use Laravel\Fortify\Http\Controllers\TwoFactorAuthenticatedSessionController;
 use Laravel\Fortify\Http\Controllers\RecoveryCodeController;
+use Illuminate\Support\Facades\Auth;
 
 Route::get('/login', function () {
     return view('login');
@@ -22,7 +23,13 @@ Route::get('/register', [AuthController::class, 'showRegister'])->name('register
 
 Route::post('/login', [AuthController::class, 'login'])->name('login.process');
 Route::post('/register', [AuthController::class, 'register'])->name('register.process');
+Route::post('/register-first-step', [AuthController::class, 'checkFirstStep'])->name('register.first');
+Route::post('/register-second-step', [AuthController::class, 'checkSecondStep'])->name('register.second');
 Route::post('/login', [AuthController::class, 'login'])->name('login.process');
+Route::post('/logout', function () {
+    Auth::logout();
+    return redirect()->route('login');
+})->name('logout');
 
 Route::get('/two-factor-challenge', function () {
     return view('auth.two-factor-challenge');
@@ -33,9 +40,11 @@ Route::post('/two-factor-challenge', [TwoFactorAuthenticatedSessionController::c
 ->name('two-factor.login');
 
 Route::middleware('auth')->group(function () {
-    Route::get('/', function () {
+    /* Route::get('/', function () {
         return view('dashboard');
     })->name('dashboard');
+*/
+Route::get('/', [DashboardController::class, 'showReport'])->name('dashboard');
 
 
     Route::resource('incomes', IncomeController::class);
