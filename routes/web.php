@@ -8,6 +8,7 @@ use App\Http\Controllers\AccountController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\CategoryController;
 use App\Http\Controllers\ProfileController;
+use App\Http\Controllers\TwoFactorVerificationController;
 use Laravel\Fortify\Http\Controllers\TwoFactorAuthenticationController;
 use Laravel\Fortify\Http\Controllers\TwoFactorQrCodeController;
 use Laravel\Fortify\Http\Controllers\TwoFactorSecretKeyController;
@@ -64,12 +65,16 @@ Route::middleware('auth')->group(function () {
 
     Route::get('/profile/two-factor', [ProfileController::class, 'active2FA'])->name('two-factor.settings');
 
+    // Verify 2FA code
+    Route::post('/verify-two-factor-code', [TwoFactorVerificationController::class, 'save'])
+    ->name('two-factor.verify');
+
     Route::get("/logout", [AuthController::class, 'logout'])->name('auth.logout');
 
     // Two factor methods
 
-    Route::post('/user/two-factor-authentication', [TwoFactorAuthenticationController::class, 'store']);
-    Route::delete('/user/two-factor-authentication', [TwoFactorAuthenticationController::class, 'destroy']);
+    Route::post('/user/two-factor-authentication', [TwoFactorAuthenticationController::class, 'store'])->name('active.two-factor');
+    Route::delete('/user/two-factor-authentication', [TwoFactorAuthenticationController::class, 'destroy'])->name('destroy.two-factor');
 
     Route::get('/user/two-factor-qr-code', [TwoFactorQrCodeController::class, 'show']);
     Route::get('/user/two-factor-secret-key', [TwoFactorSecretKeyController::class, 'show']);

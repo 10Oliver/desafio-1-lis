@@ -49,15 +49,22 @@ class ProfileController extends Controller
 
     public function active2FA()
     {
-        $user = Auth::user();
-        $user->refresh();
+        $user = Auth::user()->fresh();
 
         $google2fa = new Google2FA();
+
+        if (empty($user->getRawOriginal('two_factor_secret'))) {
+            return view('auth.two-factor-settings', [
+                'qrImageBase64' => null,
+                'recoveryCodes' => null,
+                'inactive' => true,
+            ]);
+        }
 
         $qrCodeUrl = $google2fa->getQRCodeUrl(
             config('app.name'),
             $user->email,
-            $user->two_factor_secret
+            decrypt($user->two_factor_secret)
         );
 
         $qrCode = new QrCode($qrCodeUrl);
@@ -70,8 +77,9 @@ class ProfileController extends Controller
         if (isset($user->two_factor_recovery_codes)) {
             $recoveryCodes = json_decode(decrypt($user->two_factor_recovery_codes), true);
         }
+        $inactive = false;
 
-        return view('auth.two-factor-settings', compact('qrImageBase64', 'recoveryCodes'));
+        return view('auth.two-factor-settings', compact('qrImageBase64', 'recoveryCodes', 'user', 'inactive'));
     }
 
     public function updateUserData(UpdateUserRequest $request)
