@@ -28,7 +28,7 @@ class AuthController extends Controller
         $user = User::where('email', $credentials['email'])->first();
 
         if ($user && Hash::check($credentials['password'], $user->password)) {
-            if ($user->two_factor_secret) {
+            if (!empty($user->getRawOriginal('two_factor_secret'))) {
                 $request->session()->put('login.id', $user->getAuthIdentifier());
                 return redirect()->route('two-factor.login');
             }
@@ -110,7 +110,6 @@ class AuthController extends Controller
 
         session()->flash('success', '¡Registro exitoso!');
 
-        // Redirige a la ruta de login, cambiando la URL
         return redirect()->route('login');
     }
 

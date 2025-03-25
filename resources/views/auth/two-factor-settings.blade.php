@@ -53,7 +53,7 @@
                         <span>Cuando tengas enlazado tu dispositivo, coloca el código para verificar que puedas
                             acceder.</span>
                         <input type="text" name="code" autofocus placeholder="Código de autenticación"
-                            class="form-control bg-dark text-white border w-25 my-3">
+                            class="form-control bg-dark text-white border w-50 my-3">
                         @if ($errors->has('code'))
                             <div class="alert alert-danger">
                                 {{ $errors->first('code') }}
@@ -62,12 +62,26 @@
                         <button class="btn btn-secondary px-4 py-2 mt-4" type="submit">Activar</button>
                     </form>
                 @else
-                    <form action="{{ route('destroy.two-factor') }}" method="post" autocomplete="off" class="d-flex flex-column">
+                    <!-- Desactive process -->
+                    <form action="{{ route('destroy.two-factor') }}" method="post" autocomplete="off"
+                        class="d-flex flex-column">
                         @csrf
                         @method('DELETE')
                         <h3>Segundo factor activado</h3>
                         <span class="my-4">Con este medida habilitada, tu cuenta estará más segura.</span>
-                        <button class="btn btn-secondary px-4 py-2" type="submit" style="max-width: max-content;">Desactivar</button>
+                        <p>
+                            Si deseas desactivar el segundo factor de autenticación solo debes de colocar tu contraseña y
+                            hacer clic en desactivar.
+                        </p>
+                        <input type="password" name="password" autofocus placeholder="Contraseña actual"
+                            class="form-control bg-dark text-white border w-50 my-3">
+                        @if ($errors->has('password'))
+                            <div class="alert alert-danger">
+                                {{ $errors->first('password') }}
+                            </div>
+                        @endif
+                        <button class="btn btn-secondary px-4 py-2" type="submit"
+                            style="max-width: max-content;">Desactivar</button>
                     </form>
                 @endif
             </div>
@@ -93,51 +107,5 @@
             </div>
         </div>
         <!-- #endregion -->
-    </div>
-    {{--
-        <input type="number" name="code" autofocus placeholder="Código de autenticación"
-                            class="form-control bg-dark text-white border">
-
-        <form action="{{ url('/user/two-factor-authentication') }}" method="POST" autocomplete="off" class="mt-5 mb-3 row">
-            @csrf
-        </form> --}}
-    {{--
-    @if (auth()->user()->two_factor_secret)
-        <p>✅ La autenticación en dos pasos está activada.</p>
-
-        <form action="{{ url('/user/two-factor-authentication') }}" method="POST">
-            @csrf
-            @method('DELETE')
-            <button type="submit">❌ Desactivar 2FA</button>
-        </form>
-
-        <h3>Código QR</h3>
-        <img src="data:image/png;base64,{{ $qrImageBase64 }}" alt="QR Code">
-
-        <h3>Código Secreto</h3>
-        <p>{{ decrypt(auth()->user()->two_factor_secret) }}</p>
-
-        <h3>Códigos de Recuperación</h3>
-        @if ($recoveryCodes && is_array($recoveryCodes))
-            <ul>
-                @foreach ($recoveryCodes as $code)
-                    <li>{{ $code }}</li>
-                @endforeach
-            </ul>
-        @else
-            <p>No hay códigos de recuperación generados.</p>
-        @endif
-        <form action="{{ url('/user/two-factor-recovery-codes') }}" method="POST">
-            @csrf
-            <button type="submit">🔄 Regenerar códigos de recuperación</button>
-        </form>
-    @else
-        <p>❌ No tienes activado el 2FA.</p>
-        <form action="{{ url('/user/two-factor-authentication') }}" method="POST">
-            @csrf
-            <button type="submit">✅ Activar 2FA</button>
-        </form>
-    @endif
-    --}}
     </div>
 @endsection
