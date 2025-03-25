@@ -28,7 +28,7 @@ class AuthController extends Controller
         $user = User::where('email', $credentials['email'])->first();
 
         if ($user && Hash::check($credentials['password'], $user->password)) {
-            if (!empty($user->getRawOriginal('two_factor_secret'))) {
+            if (!empty($user->getRawOriginal('two_factor_secret')) && !empty($user->two_factor_confirmed_at)) {
                 $request->session()->put('login.id', $user->getAuthIdentifier());
                 return redirect()->route('two-factor.login');
             }
