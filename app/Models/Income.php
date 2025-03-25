@@ -27,7 +27,7 @@ class Income extends Model
 
     public function incomeType()
     {
-        return $this->belongsTo(incomeType::class, 'income_type_uuid', 'income_type_uuid');
+        return $this->belongsTo(IncomeType::class, 'income_type_uuid', 'income_type_uuid');
     }
 
     public function userincomes()
