@@ -62,12 +62,9 @@ Route::middleware('auth')->group(function () {
     Route::get('/profile/change-password', [ProfileController::class, 'showPasswordView'])->name('profile.changePassword');
     Route::post('/profile/change-password', [ProfileController::class, 'updatePassword'])->name('profile.changePassword');
 
-    Route::get('/profile/two-factor', [ProfileController::class, 'showTwoFactor'])->name('profile.twoFactor');
+    Route::get('/profile/two-factor', [ProfileController::class, 'active2FA'])->name('two-factor.settings');
 
     Route::get("/logout", [AuthController::class, 'logout'])->name('auth.logout');
-
-    // Two factor views
-    Route::get('/two-factor-settings', [AuthController::class, 'active2FA'])->name('two-factor.settings');
 
     // Two factor methods
 

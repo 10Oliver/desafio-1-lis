@@ -22,7 +22,7 @@
                 </a>
             </li>
             <li class="nav-item mx-1">
-                <a href="{{ route('profile.twoFactor') }}" class="nav-link bg-dark text-white border-bottom">
+                <a href="{{ route('two-factor.settings') }}" class="nav-link bg-dark text-white border-bottom">
                     Segundo factor de autenticación
                 </a>
             </li>

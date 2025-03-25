@@ -114,32 +114,6 @@ class AuthController extends Controller
         return redirect()->route('login');
     }
 
-    public function active2FA()
-    {
-        $user = Auth::user();
-        $user->refresh();
-
-        $google2fa = new Google2FA();
-
-        $qrCodeUrl = $google2fa->getQRCodeUrl(
-            config('app.name'),
-            $user->email,
-            $user->two_factor_secret
-        );
-
-        $qrCode = new QrCode($qrCodeUrl);
-        $writer = new PngWriter();
-
-        $qrImage = $writer->write($qrCode);
-        $qrImageBase64 = base64_encode($qrImage->getString());
-
-        $recoveryCodes = null;
-        if (isset($user->two_factor_recovery_codes)) {
-            $recoveryCodes = json_decode(decrypt($user->two_factor_recovery_codes), true);
-        }
-
-        return view('auth.two-factor-settings', compact('qrImageBase64', 'recoveryCodes'));
-    }
 
     public function logout()
     {
