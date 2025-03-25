@@ -2,12 +2,12 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\ChangePasswordRequest;
 use App\Http\Requests\UpdateUserRequest;
 use App\Http\Resources\UserResource;
-use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\Http;
+use Illuminate\Support\Facades\Hash;
 
 class ProfileController extends Controller
 {
@@ -29,6 +29,17 @@ class ProfileController extends Controller
 
     public function showPasswordView()
     {
+        return view('profile.change-password');
+    }
+
+    public function updatePassword(ChangePasswordRequest $request)
+    {
+        $user = auth()->user();
+        $user->update([
+            'password' => Hash::make($request->password),
+        ]);
+
+        session()->flash('success', 'Contraseña actualizada');
         return view('profile.change-password');
     }
 

@@ -36,15 +36,15 @@ Route::get('/two-factor-challenge', function () {
 })->name('two-factor.login');
 
 Route::post('/two-factor-challenge', [TwoFactorAuthenticatedSessionController::class, 'store'])
-->middleware('guest')
-->name('two-factor.login');
+    ->middleware('guest')
+    ->name('two-factor.login');
 
 Route::middleware('auth')->group(function () {
     /* Route::get('/', function () {
         return view('dashboard');
     })->name('dashboard');
 */
-Route::get('/', [DashboardController::class, 'showReport'])->name('dashboard');
+    Route::get('/', [DashboardController::class, 'showReport'])->name('dashboard');
 
 
     Route::resource('incomes', IncomeController::class);
@@ -60,6 +60,8 @@ Route::get('/', [DashboardController::class, 'showReport'])->name('dashboard');
     Route::post('/profile/edit', [ProfileController::class, 'updateUserData'])->name('profile.edit');
 
     Route::get('/profile/change-password', [ProfileController::class, 'showPasswordView'])->name('profile.changePassword');
+    Route::post('/profile/change-password', [ProfileController::class, 'updatePassword'])->name('profile.changePassword');
+
     Route::get('/profile/two-factor', [ProfileController::class, 'showTwoFactor'])->name('profile.twoFactor');
 
     Route::get("/logout", [AuthController::class, 'logout'])->name('auth.logout');
