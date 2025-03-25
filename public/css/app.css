@@ -110,6 +110,12 @@ html {
     background-color: #862424;
 }
 
+.logout-icon:hover > button > span,
+.logout-icon:hover > button > p {
+    color: white !important;
+}
+
+
 .main-layout {
     flex: 1;
     width: calc(100% - 75px);

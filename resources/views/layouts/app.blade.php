@@ -11,7 +11,7 @@
 </head>
 
 <body>
-    
+
     <navbar class="mobile-navbar">
         <span class="material-symbols-outlined" id="navbar-menu-button">
             menu
@@ -22,7 +22,7 @@
             <img src="{{ asset('resources/images/user-layout.png') }}" alt="">
         </div>
         <div class="navigation-bar">
-            
+
 
              <a href="{{ route('incomes.index') }}" class="sidebar-icon">
                 <span class="material-symbols-outlined">savings</span>
@@ -67,7 +67,7 @@
 
         </div>
 
-        
+
     </aside>
     <main class="main-layout">
         @yield('content')
