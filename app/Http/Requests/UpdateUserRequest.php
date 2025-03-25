@@ -3,11 +3,8 @@
 namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
-use Illuminate\Contracts\Validation\Validator;
-use Illuminate\Http\Exceptions\HttpResponseException;
-use Illuminate\Validation\Rules\Password;
 
-class RegisterSecondStepRequest extends FormRequest
+class UpdateUserRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -25,9 +22,11 @@ class RegisterSecondStepRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'email' => 'required|email|unique:user,email',
-            'phone' => 'required|string|max:250',
-            'password' => ['required', 'confirmed', 'regex:/^(?=.*[a-z])(?=.*[A-Z]).+$/', Password::min(8)->numbers()->symbols()->uncompromised()],
+            'first_name' => 'required|string|min:3|max:255',
+            'second_name' => 'nullable|string|min:3|max:255',
+            'lastname' => 'required|string|min:3|max:255',
+            'second_lastname' => 'nullable|string|min:3|max:255',
+            'phone' => 'required',
         ];
     }
 
@@ -53,13 +52,11 @@ class RegisterSecondStepRequest extends FormRequest
             'email.unique' => 'Ya está registrado.',
 
             'phone.required' => 'Campo obligatorio.',
-            'phone.regex' => 'Formato incorrecto (0000-0000)',
-            'phone.max' => 'Máximo 250 caracteres',
 
             'nationality.required' => 'Campo obligatorio.',
 
             'dui.required_if' => 'Campo obligatorio si es nacional.',
-            'dui.regex' => 'Formato inválido. (00000000-0)',
+            'dui.regex' => 'Formato inválido.',
 
             'document.required_if' => 'Campo obligatorio.',
             'document.max' => 'Máximo 50 caracteres.',
@@ -70,26 +67,6 @@ class RegisterSecondStepRequest extends FormRequest
             'password.required' => 'Campo obligatorio.',
             'password.min' => 'Mínimo 8 caracteres.',
             'password.confirmed' => 'Las contraseñas no coinciden.',
-
-            'password.regex' => 'Debe incluir mayúsculas y minúsculas.',
-            'password.numbers' => 'Debe incluir al menos 1 número.',
-            'password.symbols' => 'Debe incluir al menos 1 símbolo.',
-            'password.uncompromised' => 'Contraseña comprometida, intenta otra.',
         ];
-    }
-
-    public function withValidator($validator)
-    {
-        $validator->sometimes('phone', ['regex:/^\d{4}-\d{4}$/'], function ($input) {
-            return $input->nationality == 1;
-        });
-    }
-
-    protected function failedValidation(Validator $validator)
-    {
-        throw new HttpResponseException(response()->json([
-            'step' => 1,
-            'errors'  => $validator->errors()
-        ], 422));
     }
 }

@@ -7,10 +7,13 @@ use App\Http\Requests\RegisterSecondStepRequest;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
-use App\Http\Controllers\redirect;
-use App\Http\Requests\RegisterFirstStepRequest;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Http;
+use Endroid\QrCode\QrCode;
+use Endroid\QrCode\Writer\PngWriter;
+use PragmaRX\Google2FA\Google2FA;
+use App\Http\Controllers\redirect;
+use App\Http\Requests\RegisterFirstStepRequest;
 use Illuminate\Support\Facades\Validator;
 
 class AuthController extends Controller
@@ -22,9 +25,15 @@ class AuthController extends Controller
             'password' => ['required'],
         ]);
 
-        if (Auth::attempt($credentials)) {
-            $request->session()->regenerate();
+        $user = User::where('email', $credentials['email'])->first();
 
+        if ($user && Hash::check($credentials['password'], $user->password)) {
+            if (!empty($user->getRawOriginal('two_factor_secret')) && !empty($user->two_factor_confirmed_at)) {
+                $request->session()->put('login.id', $user->getAuthIdentifier());
+                return redirect()->route('two-factor.login');
+            }
+            Auth::login($user);
+            $request->session()->regenerate();
             return redirect()->intended('/');
         }
 
@@ -101,7 +110,13 @@ class AuthController extends Controller
 
         session()->flash('success', '¡Registro exitoso!');
 
-        // Redirige a la ruta de login, cambiando la URL
         return redirect()->route('login');
+    }
+
+
+    public function logout()
+    {
+        Auth::logout();
+        return redirect('/login');
     }
 }
