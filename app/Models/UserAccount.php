@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use Illuminate\Support\Str;
 
 class UserAccount extends Model
 {
@@ -21,6 +22,16 @@ class UserAccount extends Model
         'account_uuid',
     ];
 
+
+    protected static function boot()
+    {
+        parent::boot();
+        static::creating(function ($model) {
+            if (empty($model->user_account_uuid)) {
+                $model->user_account_uuid = Str::uuid(); // Genera el UUID al crear el modelo
+            }
+        });
+    }
     // Relación N:1 con User
     public function user()
     {
