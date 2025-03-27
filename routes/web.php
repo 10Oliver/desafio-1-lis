@@ -8,6 +8,7 @@ use App\Http\Controllers\AccountController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\CategoryController;
 use App\Http\Controllers\ProfileController;
+use App\Http\Controllers\ReportController;
 use App\Http\Controllers\TwoFactorVerificationController;
 use Laravel\Fortify\Http\Controllers\TwoFactorAuthenticationController;
 use Laravel\Fortify\Http\Controllers\TwoFactorQrCodeController;
@@ -55,6 +56,7 @@ Route::middleware('auth')->group(function () {
     Route::resource('accounts', AccountController::class);
 
     Route::resource('categories', CategoryController::class);
+    Route::resource('report', ReportController::class);
 
     Route::get('/profile', [ProfileController::class, 'index'])->name('profile.index');
     Route::get('/profile/edit', [ProfileController::class, 'editIndex'])->name('profile.edit');

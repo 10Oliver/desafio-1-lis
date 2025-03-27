@@ -69,6 +69,9 @@
             </div>
         </div>
     </div>
+    <a href="{{ route('report.index') }}" target="_blank">
+        Generar pdf
+    </a>
 </div>
 
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
