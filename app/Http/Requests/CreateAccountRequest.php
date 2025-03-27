@@ -24,7 +24,7 @@ class CreateAccountRequest extends FormRequest
         return [
             'name' => 'required|string|min:5|max:255',
             'account_type_uuid' => 'required',
-            'amount' => 'nullable|numeric'
+            'amount' => 'nullable|numeric|min:0'
         ];
     }
 
@@ -39,6 +39,7 @@ class CreateAccountRequest extends FormRequest
             'account_type_uuid.required' => 'El tipo de cuenta es obligatorio.',
 
             'amount.numeric' => 'El monto debe ser un número válido.',
+            'amount.min' => 'El monto debe de ser mayor a 0',
         ];
     }
 }
