@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use Illuminate\Support\Str;
 
 class Account extends Model
 {
@@ -21,6 +22,16 @@ class Account extends Model
         'amount',
         'account_type_uuid',
     ];
+
+    protected static function boot()
+    {
+        parent::boot();
+        static::creating(function ($model) {
+            if (empty($model->account_uuid)) {
+                $model->account_uuid = Str::uuid(); // Genera el UUID al crear el modelo
+            }
+        });
+    }
 
     public function accountType()
     {
