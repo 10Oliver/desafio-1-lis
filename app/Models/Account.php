@@ -43,9 +43,4 @@ class Account extends Model
     {
         return $this->hasMany(UserAccount::class, 'account_uuid', 'account_uuid');
     }
-
-    public function incomes()
-    {
-        return $this->hasMany(Income::class, 'account_uuid', 'account_uuid');
-    }
 }

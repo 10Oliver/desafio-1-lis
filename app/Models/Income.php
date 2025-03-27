@@ -30,8 +30,8 @@ class Income extends Model
         return $this->belongsTo(IncomeType::class, 'income_type_uuid', 'income_type_uuid');
     }
 
-    public function userincomes()
+    public function userIncomes()
     {
-        return $this->hasMany(Userincome::class, 'income_uuid', 'income_uuid');
+        return $this->hasMany(UserIncomes::class, 'income_uuid', 'income_uuid');
     }
 }

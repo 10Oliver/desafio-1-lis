@@ -22,9 +22,9 @@ class UserIncomes extends Model
     ];
 
     // Relación N:1 con User
-    public function user()
+    public function userAccount()
     {
-        return $this->belongsTo(User::class, 'user_uuid', 'user_uuid');
+        return $this->belongsTo(UserAccount::class, 'user_account_uuid', 'user_account_uuid');
     }
 
     // Relación N:1 con Income

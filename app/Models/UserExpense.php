@@ -21,9 +21,9 @@ class UserExpense extends Model
         'expense_uuid',
     ];
 
-    public function user()
+    public function userAccount()
     {
-        return $this->belongsTo(User::class, 'user_uuid', 'user_uuid');
+        return $this->belongsTo(UserAccount::class, 'user_account_uuid', 'user_account_uuid');
     }
 
     public function expense()
