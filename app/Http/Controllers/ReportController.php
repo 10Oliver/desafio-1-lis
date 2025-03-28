@@ -292,7 +292,7 @@ class ReportController extends Controller
         $chartUrl = 'https://quickchart.io/chart?c=' . urlencode($jsonConfig);
         $imageData = base64_encode(file_get_contents($chartUrl));
 
-        return 'data:image/png;base64,';
+        return 'data:image/png;base64,' . $imageData;
     }
 
     private function generateColorFromAccountName($accountName)
