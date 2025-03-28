@@ -13,27 +13,28 @@ class ReportController extends Controller
 {
     public function index()
     {
-        $userUuid     = Auth::user()->user_uuid;
+        $userUuid = Auth::user()->user_uuid;
         $startOfMonth = Carbon::now()->startOfMonth()->toDateTimeString();
-        $endOfMonth   = Carbon::now()->endOfMonth()->toDateTimeString();
+        $endOfMonth = Carbon::now()->endOfMonth()->toDateTimeString();
 
         $accountsFinancials = $this->getAccountsFinancials($userUuid, $startOfMonth, $endOfMonth);
-        $groupedExpenses    = $this->getGroupedExpenses($startOfMonth, $endOfMonth, $userUuid);
-        $groupedIncomes     = $this->getGroupedIncomes($startOfMonth, $endOfMonth, $userUuid);
-        $accounts           = $this->getUserAccounts($userUuid);
+        $groupedExpenses = $this->getGroupedExpenses($startOfMonth, $endOfMonth, $userUuid);
+        $groupedIncomes = $this->getGroupedIncomes($startOfMonth, $endOfMonth, $userUuid);
+        $accounts = $this->getUserAccounts($userUuid);
 
-        // Mapeo de account_uuid a su nombre para facilitar consultas posteriores
+        // Map accounts
         $accountsMapping = $accounts->pluck('name', 'account_uuid')->toArray();
 
-        $transactions       = $this->getTransactions($userUuid, $startOfMonth, $endOfMonth);
+        $transactions = $this->getTransactions($userUuid, $startOfMonth, $endOfMonth);
         $historicalBalances = $this->calculateHistoricalBalances($transactions, $accounts, $accountsMapping);
-        $chartImageSrc      = $this->generateChartImage($historicalBalances);
+
+        $chartImageSrc = $this->generateChartImage($historicalBalances);
 
         $data = [
             'accounts_balance' => $accountsFinancials,
-            'grouped_incomes'  => $groupedIncomes,
+            'grouped_incomes' => $groupedIncomes,
             'grouped_expenses' => $groupedExpenses,
-            'chart'            => $chartImageSrc,
+            'chart' => $chartImageSrc,
         ];
 
         $pdf = PDF::loadView('report.main', $data);
@@ -91,7 +92,7 @@ class ReportController extends Controller
 
     /**
 ¿¿
-     * Group expenses by type 
+     * Group expenses by type
      */
     private function getGroupedExpenses($startOfMonth, $endOfMonth, $userUuid)
     {
@@ -205,14 +206,16 @@ class ReportController extends Controller
 
         $historicalBalances = [];
         foreach ($accounts as $account) {
-            $accountId   = $account->account_uuid;
+            $accountId = $account->account_uuid;
             $accountName = $accountsMapping[$accountId] ?? 'Unknown';
             $dailyMovements = [];
-            $lastValue   = 0;
+            $lastValue = 0; // Initial value for account
             foreach ($dates as $date) {
                 if (isset($movementsByAccount[$accountId][$date])) {
-                    $lastValue = $movementsByAccount[$accountId][$date];
+                    // Add last day amount to calculate historical
+                    $lastValue += $movementsByAccount[$accountId][$date];
                 }
+                // Set first value
                 $dailyMovements[$date] = $lastValue;
             }
             $historicalBalances[$accountName] = $dailyMovements;
@@ -226,46 +229,46 @@ class ReportController extends Controller
      */
     private function generateChartImage($historicalBalances)
     {
-        $labels   = array_keys(reset($historicalBalances));
+        $labels = array_keys(reset($historicalBalances));
         $datasets = [];
 
         foreach ($historicalBalances as $accountName => $data) {
             $datasets[] = [
-                'label'           => $accountName,
-                'data'            => array_values($data),
-                'borderColor'     => $this->generateColorFromAccountName($accountName),
+                'label' => $accountName,
+                'data' => array_values($data),
+                'borderColor' => $this->generateColorFromAccountName($accountName),
                 'backgroundColor' => $this->generateColorFromAccountName($accountName),
-                'fill'            => false,
+                'fill' => false,
             ];
         }
 
         $chartConfig = [
-            'type'    => 'line',
-            'data'    => [
-                'labels'   => $labels,
+            'type' => 'line',
+            'data' => [
+                'labels' => $labels,
                 'datasets' => $datasets,
             ],
             'options' => [
                 'plugins' => [
                     'datalabels' => [
                         'display' => true,
-                        'color'   => '#000',
-                        'align'   => 'top',
-                        'anchor'  => 'end',
+                        'color' => '#000',
+                        'align' => 'top',
+                        'anchor' => 'end',
                     ],
                 ],
-                'scales'  => [
+                'scales' => [
                     'y' => [
                         'beginAtZero' => true,
-                        'title'       => [
+                        'title' => [
                             'display' => true,
-                            'text'    => 'Movimiento'
+                            'text' => 'Movimiento'
                         ],
                     ],
                     'x' => [
                         'title' => [
                             'display' => true,
-                            'text'    => 'Fecha'
+                            'text' => 'Fecha'
                         ],
                     ],
                 ],
@@ -274,8 +277,8 @@ class ReportController extends Controller
         ];
 
         $jsonConfig = json_encode($chartConfig);
-        $chartUrl   = 'https://quickchart.io/chart?c=' . urlencode($jsonConfig);
-        $imageData  = base64_encode(file_get_contents($chartUrl));
+        $chartUrl = 'https://quickchart.io/chart?c=' . urlencode($jsonConfig);
+        $imageData = base64_encode(file_get_contents($chartUrl));
 
         return 'data:image/png;base64,' . $imageData;
     }
@@ -283,9 +286,9 @@ class ReportController extends Controller
     private function generateColorFromAccountName($accountName)
     {
         $hash = crc32($accountName);
-        $r    = ($hash & 0xFF0000) >> 16;
-        $g    = ($hash & 0x00FF00) >> 8;
-        $b    = $hash & 0x0000FF;
+        $r = ($hash & 0xFF0000) >> 16;
+        $g = ($hash & 0x00FF00) >> 8;
+        $b = $hash & 0x0000FF;
 
         return sprintf('#%02X%02X%02X', $r, $g, $b);
     }
