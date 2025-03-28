@@ -113,9 +113,12 @@
             @endforeach
         </tbody>
     </table>
+    <div style="page-break-before: always">
+        <h3>Gráfico con balance por cuentas</h3>
+        <img src="{{ $chart }}" style="height: 410px" alt="Gráfico de Balance Histórico">
+    </div>
 
-    {{-- {{ $chart }} --}}
-    {{ $data }}
+
 </body>
 
 </html>

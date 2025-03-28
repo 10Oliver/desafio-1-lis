@@ -13,12 +13,39 @@ class ReportController extends Controller
 {
     public function index()
     {
-        $userUuid = Auth::user()->user_uuid;
-
+        $userUuid     = Auth::user()->user_uuid;
         $startOfMonth = Carbon::now()->startOfMonth()->toDateTimeString();
         $endOfMonth   = Carbon::now()->endOfMonth()->toDateTimeString();
 
-        $accountsFinancials = Account::select(
+        $accountsFinancials = $this->getAccountsFinancials($userUuid, $startOfMonth, $endOfMonth);
+        $groupedExpenses    = $this->getGroupedExpenses($startOfMonth, $endOfMonth, $userUuid);
+        $groupedIncomes     = $this->getGroupedIncomes($startOfMonth, $endOfMonth, $userUuid);
+        $accounts           = $this->getUserAccounts($userUuid);
+
+        // Mapeo de account_uuid a su nombre para facilitar consultas posteriores
+        $accountsMapping = $accounts->pluck('name', 'account_uuid')->toArray();
+
+        $transactions       = $this->getTransactions($userUuid, $startOfMonth, $endOfMonth);
+        $historicalBalances = $this->calculateHistoricalBalances($transactions, $accounts, $accountsMapping);
+        $chartImageSrc      = $this->generateChartImage($historicalBalances);
+
+        $data = [
+            'accounts_balance' => $accountsFinancials,
+            'grouped_incomes'  => $groupedIncomes,
+            'grouped_expenses' => $groupedExpenses,
+            'chart'            => $chartImageSrc,
+        ];
+
+        $pdf = PDF::loadView('report.main', $data);
+        return $pdf->stream('report.pdf');
+    }
+
+    /**
+     * Get balance by account
+     */
+    private function getAccountsFinancials($userUuid, $startOfMonth, $endOfMonth)
+    {
+        return Account::select(
             'account.name',
             DB::raw('COALESCE((
                 SELECT SUM(expense.amount)
@@ -60,8 +87,15 @@ class ReportController extends Controller
                 ), 0) as balance
             ')
         )->get();
+    }
 
-        $groupedExpenses = DB::table('expense_type')
+    /**
+¿¿
+     * Group expenses by type 
+     */
+    private function getGroupedExpenses($startOfMonth, $endOfMonth, $userUuid)
+    {
+        return DB::table('expense_type')
             ->leftJoin('expense', function ($join) use ($startOfMonth, $endOfMonth) {
                 $join->on('expense_type.expense_type_uuid', '=', 'expense.expense_type_uuid')
                     ->whereBetween('expense.created_at', [$startOfMonth, $endOfMonth]);
@@ -74,8 +108,14 @@ class ReportController extends Controller
             ->select('expense_type.name as expense_type', DB::raw('COALESCE(SUM(expense.amount), 0) as total_amount'))
             ->groupBy('expense_type.expense_type_uuid', 'expense_type.name')
             ->get();
+    }
 
-        $groupedIncomes = DB::table('income_type')
+    /**
+     * Group incomes but type
+     */
+    private function getGroupedIncomes($startOfMonth, $endOfMonth, $userUuid)
+    {
+        return DB::table('income_type')
             ->leftJoin('income', function ($join) use ($startOfMonth, $endOfMonth) {
                 $join->on('income_type.income_type_uuid', '=', 'income.income_type_uuid')
                     ->whereBetween('income.created_at', [$startOfMonth, $endOfMonth]);
@@ -88,29 +128,42 @@ class ReportController extends Controller
             ->select('income_type.name as income_type', DB::raw('COALESCE(SUM(income.amount), 0) as total_amount'))
             ->groupBy('income_type.income_type_uuid', 'income_type.name')
             ->get();
+    }
 
+    /**
+     * Get user Account
+     */
+    private function getUserAccounts($userUuid)
+    {
+        return Account::whereHas('userAccounts', function ($query) use ($userUuid) {
+            $query->where('user_uuid', $userUuid);
+        })->get();
+    }
 
-        $accounts = Account
-
+    /**
+     * Get transaction and info
+     */
+    private function getTransactions($userUuid, $startOfMonth, $endOfMonth)
+    {
         $query = "
             (SELECT i.amount, i.`date`, a.name, ua.account_uuid, 'ingreso' as tipo
-            FROM income i
-            INNER JOIN user_income ui ON ui.income_uuid = i.income_uuid
-            INNER JOIN user_account ua ON ua.user_account_uuid = ui.user_account_uuid
-            INNER JOIN account a ON a.account_uuid = ua.account_uuid
-            WHERE ua.user_uuid = ?
-            AND i.created_at BETWEEN ? AND ?)
+             FROM income i
+             INNER JOIN user_income ui ON ui.income_uuid = i.income_uuid
+             INNER JOIN user_account ua ON ua.user_account_uuid = ui.user_account_uuid
+             INNER JOIN account a ON a.account_uuid = ua.account_uuid
+             WHERE ua.user_uuid = ?
+             AND i.created_at BETWEEN ? AND ?)
             UNION
             (SELECT e.amount, e.`date`, a.name, ua.account_uuid, 'gasto' as tipo
-            FROM expense e
-            INNER JOIN user_expense ue ON ue.expense_uuid = e.expense_uuid
-            INNER JOIN user_account ua ON ua.user_account_uuid = ue.user_account_uuid
-            INNER JOIN account a ON a.account_uuid = ua.account_uuid
-            WHERE ua.user_uuid = ?
-            AND e.created_at BETWEEN ? AND ?)
+             FROM expense e
+             INNER JOIN user_expense ue ON ue.expense_uuid = e.expense_uuid
+             INNER JOIN user_account ua ON ua.user_account_uuid = ue.user_account_uuid
+             INNER JOIN account a ON a.account_uuid = ua.account_uuid
+             WHERE ua.user_uuid = ?
+             AND e.created_at BETWEEN ? AND ?)
         ";
 
-        $transactions = DB::select($query, [
+        return DB::select($query, [
             $userUuid,
             $startOfMonth,
             $endOfMonth,
@@ -118,33 +171,122 @@ class ReportController extends Controller
             $startOfMonth,
             $endOfMonth
         ]);
+    }
 
-        $transactionsCollection = collect($transactions);
-        $dates = collect(range(0, Carbon::now()->daysInMonth - 1))
-            ->map(fn($i) => Carbon::now()->startOfMonth()->addDays($i)->format('Y-m-d'))
-            ->all();
+    /**
+     * Calculate balance
+     */
+    private function calculateHistoricalBalances($transactions, $accounts, $accountsMapping)
+    {
+        $dates = [];
+        foreach ($transactions as $tx) {
+            if (!in_array($tx->date, $dates)) {
+                $dates[] = $tx->date;
+            }
+        }
+        sort($dates);
 
-        $datasets = [];
-
-        foreach($accounts as $account) {
-            $currentBalance = $account->amount;
-            $dailyBalances = [];
-            $accountTransactions = $transactionsCollection->filter(function ($transaction) use ($account) {
-                return $transaction->account_uuid === $account->account_uuid;
-            });
-            $datasets = $accountTransactions;
+        $movementsByAccount = [];
+        foreach ($transactions as $tx) {
+            $accountId = $tx->account_uuid;
+            $amount    = (float)$tx->amount;
+            if ($tx->tipo === 'gasto') {
+                $amount = -$amount;
+            }
+            if (!isset($movementsByAccount[$accountId])) {
+                $movementsByAccount[$accountId] = [];
+            }
+            if (isset($movementsByAccount[$accountId][$tx->date])) {
+                $movementsByAccount[$accountId][$tx->date] += $amount;
+            } else {
+                $movementsByAccount[$accountId][$tx->date] = $amount;
+            }
         }
 
+        $historicalBalances = [];
+        foreach ($accounts as $account) {
+            $accountId   = $account->account_uuid;
+            $accountName = $accountsMapping[$accountId] ?? 'Unknown';
+            $dailyMovements = [];
+            $lastValue   = 0;
+            foreach ($dates as $date) {
+                if (isset($movementsByAccount[$accountId][$date])) {
+                    $lastValue = $movementsByAccount[$accountId][$date];
+                }
+                $dailyMovements[$date] = $lastValue;
+            }
+            $historicalBalances[$accountName] = $dailyMovements;
+        }
 
+        return $historicalBalances;
+    }
 
-        $data = [
-            'accounts_balance' => $accountsFinancials,
-            'grouped_incomes' => $groupedIncomes,
-            'grouped_expenses' => $groupedExpenses,
-            'chart' => json_encode($transactions),
-            'data' => $accounts
+    /**
+     * Graphic and get image
+     */
+    private function generateChartImage($historicalBalances)
+    {
+        $labels   = array_keys(reset($historicalBalances));
+        $datasets = [];
+
+        foreach ($historicalBalances as $accountName => $data) {
+            $datasets[] = [
+                'label'           => $accountName,
+                'data'            => array_values($data),
+                'borderColor'     => $this->generateColorFromAccountName($accountName),
+                'backgroundColor' => $this->generateColorFromAccountName($accountName),
+                'fill'            => false,
+            ];
+        }
+
+        $chartConfig = [
+            'type'    => 'line',
+            'data'    => [
+                'labels'   => $labels,
+                'datasets' => $datasets,
+            ],
+            'options' => [
+                'plugins' => [
+                    'datalabels' => [
+                        'display' => true,
+                        'color'   => '#000',
+                        'align'   => 'top',
+                        'anchor'  => 'end',
+                    ],
+                ],
+                'scales'  => [
+                    'y' => [
+                        'beginAtZero' => true,
+                        'title'       => [
+                            'display' => true,
+                            'text'    => 'Movimiento'
+                        ],
+                    ],
+                    'x' => [
+                        'title' => [
+                            'display' => true,
+                            'text'    => 'Fecha'
+                        ],
+                    ],
+                ],
+            ],
+            'plugins' => ['chartjs-plugin-datalabels'],
         ];
-        $pdf = PDF::loadView('report.main', $data);
-        return $pdf->stream('report.pdf');
+
+        $jsonConfig = json_encode($chartConfig);
+        $chartUrl   = 'https://quickchart.io/chart?c=' . urlencode($jsonConfig);
+        $imageData  = base64_encode(file_get_contents($chartUrl));
+
+        return 'data:image/png;base64,' . $imageData;
+    }
+
+    private function generateColorFromAccountName($accountName)
+    {
+        $hash = crc32($accountName);
+        $r    = ($hash & 0xFF0000) >> 16;
+        $g    = ($hash & 0x00FF00) >> 8;
+        $b    = $hash & 0x0000FF;
+
+        return sprintf('#%02X%02X%02X', $r, $g, $b);
     }
 }
