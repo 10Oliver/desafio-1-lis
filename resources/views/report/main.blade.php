@@ -6,12 +6,9 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Reporte</title>
     <style>
-        @import url('https://fonts.googleapis.com/css2?family=Poppins&display=swap');
-
         * {
-            font-family: "Poppins", sans-serif !important;
+            font-family: "DejaVu Sans", sans-serif;
         }
-
         table {
             width: 100%;
             color: white;
@@ -21,7 +18,7 @@
 
         thead {
             background-color: #333333;
-            font-size: 16px;
+            font-size: 12px;
             font-weight: 800;
         }
 
@@ -32,26 +29,57 @@
 
         tbody>tr>td {
             color: #555555;
-            font-size: 14px;
+            font-size: 10px;
             font-weight: 500
         }
 
         .title {
-            display: flex;
-            flex-direction: row;
-            text-align: left;
+            background-color: #0094ba;
+            text-align: center;
+            padding: 10px 0px 20px 0px;
+            color: white;
+        }
+
+        h1 {
+            margin-bottom: 10px;
+        }
+
+        h3 {
+            padding: 5px 0px;
+            text-align: center;
+            color: white;
+            font-weight: 500;
+            font-size: 15px;
+        }
+
+        .balance-account {
+            background-color: #00c37d;
+        }
+
+        .balance-entries {
+            background-color: #698538;
+        }
+
+        .balance-ends {
+            background-color: #ffb15c;
+        }
+
+        .balance-bar {
+            background-color: #818181;
         }
     </style>
 </head>
 
 <body>
-    <div class="title" style="display: flex;">
+    <div class="title">
         <h1>Reporte general</h1>
-        {{ $startDate }} - {{ $endDate }}
+        <span>
+            {{ $startDate }} - {{ $endDate }}
+        </span>
     </div>
 
 
-    <h3>Balance por cuentas</h3>
+    <h3 class="balance-account">Balance por cuentas</h3>
     <table>
         <thead>
             <tr>
@@ -81,7 +109,7 @@
         </tbody>
     </table>
 
-    <h3>Balance de entradas</h3>
+    <h3 class="balance-entries">Balance de entradas</h3>
     <table>
         <thead>
             <tr>
@@ -102,7 +130,7 @@
             @endforeach
         </tbody>
     </table>
-    <h3>Balance de salidas</h3>
+    <h3 class="balance-ends">Balance de salidas</h3>
     <table>
         <thead>
             <tr>
@@ -124,7 +152,7 @@
         </tbody>
     </table>
     <div style="page-break-before: always">
-        <h3>Gráfico con balance por cuentas</h3>
+        <h3 class="balance-bar">Gráfico con balance por cuentas</h3>
         <img src="{{ $chart }}" style="height: 410px" alt="Gráfico de Balance Histórico">
     </div>
 

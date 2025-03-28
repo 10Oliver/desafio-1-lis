@@ -49,7 +49,7 @@ class ReportController extends Controller
             'endDate' => $endDate
         ];
 
-        $pdf = PDF::loadView('report.main', $data);
+        $pdf = PDF::loadView('report.main', $data)->setOption('defaultFont', 'DejaVu Sans');
         return $pdf->stream('report.pdf');
     }
 
