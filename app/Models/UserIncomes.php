@@ -17,7 +17,7 @@ class UserIncomes extends Model
 
     protected $fillable = [
         'user_income_uuid',
-        'user_uuid',
+        'user_account_uuid',
         'income_uuid',
     ];
 

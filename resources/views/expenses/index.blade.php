@@ -108,11 +108,13 @@
                 <div class="modal-body bg-dark">
                     <form action="{{ route('expenses.store') }}" method="POST" enctype="multipart/form-data" id="expenseForm">
                         @csrf
+                        
                         <!-- Nombre -->
                         <div class="mb-3">
                             <label for="name" class="form-label">Nombre de salida:</label>
                             <input type="text" name="name" id="name" class="form-control bg-dark text-white border border-secondary" required>
                         </div>
+
                         <!-- Tipo de salida -->
                         <div class="mb-3">
                             <label for="expense_type" class="form-label">Tipo de salida:</label>
@@ -123,6 +125,20 @@
                                 @endforeach
                             </select>
                         </div>
+
+                        <!-- Cuenta -->
+                        <div class="mb-3">
+                            <label for="user_account_uuid" class="form-label">Cuenta:</label>
+                            <select name="user_account_uuid" id="user_account_uuid" class="form-select bg-dark text-white border border-secondary" required>
+                                <option value="">Seleccione una cuenta</option>
+                                @foreach($userAccounts as $account)
+                                    <option value="{{ $account->user_account_uuid }}">
+                                        {{ $account->account->name }} - {{ $account->account->accountType->name ?? 'Sin tipo' }}
+                                    </option>
+                                @endforeach
+                            </select>
+                        </div>
+
                         <!-- Monto de salida -->
                         <div class="mb-3">
                             <label for="amount" class="form-label">Monto de salida:</label>
