@@ -17,7 +17,7 @@ class UserExpense extends Model
 
     protected $fillable = [
         'user_expense_uuid',
-        'user_uuid',
+        'user_account_uuid',
         'expense_uuid',
     ];
 
