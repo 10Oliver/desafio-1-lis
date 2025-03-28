@@ -17,10 +17,9 @@ class ExpenseController extends Controller
     {
         $expenses = Expense::paginate(10);
         $expenseTypes = ExpenseType::all();
-
-        $userAccounts=UserAccount::where('user_uuid', Auth::id())
-        ->with('account.accountType')
-        ->get();
+        $userAccounts = UserAccount::where('user_uuid', Auth::id())
+            ->with('account.accountType')
+            ->get();
         return view('expenses.index', compact('expenses', 'expenseTypes', 'userAccounts'));
     }
 
@@ -42,26 +41,35 @@ class ExpenseController extends Controller
             'description' => 'nullable|string',
         ]);
 
+        $userAccount = UserAccount::where('user_account_uuid', $request->user_account_uuid)->first();
+        $account = $userAccount->account;
+        if ($account->amount < $request->amount) {
+            return back()->withErrors(['amount' => 'Fondos insuficientes para esta salida.']);
+        }
+
         $ticketPath = null;
         if ($request->hasFile('ticket')) {
             $ticketPath = $request->file('ticket')->store('tickets', 'public');
         }
 
         $expense = Expense::create([
-            'expense_uuid'      => Str::uuid(),
-            'name'              => $request->name,
+            'expense_uuid' => Str::uuid(),
+            'name' => $request->name,
             'expense_type_uuid' => $request->expense_type,
-            'amount'            => $request->amount,
-            'date'              => $request->date,
-            'ticket_path'       => $ticketPath,
-            'description'       => $request->description,
+            'amount' => $request->amount,
+            'date' => $request->date,
+            'ticket_path' => $ticketPath,
+            'description' => $request->description,
         ]);
 
         UserExpense::create([
             'user_expense_uuid' => Str::uuid(),
-            'user_account_uuid'=> $request->user_account_uuid,
+            'user_account_uuid' => $request->user_account_uuid,
             'expense_uuid' => $expense->expense_uuid,
         ]);
+
+        $account->amount -= $request->amount;
+        $account->save();
 
         return redirect()->route('expenses.index')->with('success', 'Salida registrada correctamente.');
     }

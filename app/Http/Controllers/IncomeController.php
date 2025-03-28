@@ -17,7 +17,7 @@ class IncomeController extends Controller
     {
         $incomes = Income::paginate(10);
         $incomeTypes = IncomeType::all();
-        $userAccounts=UserAccount::where('user_uuid', Auth::id())->with('account')->get();
+        $userAccounts = UserAccount::where('user_uuid', Auth::id())->with('account')->get();
         return view('incomes.index', compact('incomes', 'incomeTypes', 'userAccounts'));
     }
 
@@ -44,7 +44,7 @@ class IncomeController extends Controller
             $ticketPath = $request->file('ticket')->store('tickets', 'public');
         }
 
-        $income=Income::create([
+        $income = Income::create([
             'income_uuid' => Str::uuid(),
             'name' => $request->name,
             'income_type_uuid' => $request->income_type,
@@ -59,6 +59,11 @@ class IncomeController extends Controller
             'user_account_uuid' => $request->user_account_uuid,
             'income_uuid' => $income->income_uuid,
         ]);
+
+        $userAccount = UserAccount::where('user_account_uuid', $request->user_account_uuid)->with('account')->first();
+        $account = $userAccount->account;
+        $account->amount += $request->amount;
+        $account->save();
 
         return redirect()->route('incomes.index')->with('success', 'Ingreso registrado correctamente.');
     }

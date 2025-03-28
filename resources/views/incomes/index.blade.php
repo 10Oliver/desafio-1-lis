@@ -12,10 +12,16 @@
 
     <!-- Mensaje de éxito -->
     @if(session('success'))
-    <div class="alert alert-success mx-3">
-        {{ session('success') }}
-    </div>
+        <script>
+            Swal.fire({
+             icon: 'success',
+             title: 'Ingreso registrado',
+                text: "{{ session('success') }}",
+                confirmButtonColor: '#3085d6'
+         });
+        </script>
     @endif
+
 
     <!-- Tabla de ingresos -->
     <div class="table-responsive">
