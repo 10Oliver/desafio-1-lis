@@ -35,11 +35,21 @@
             font-size: 14px;
             font-weight: 500
         }
+
+        .title {
+            display: flex;
+            flex-direction: row;
+            text-align: left;
+        }
     </style>
 </head>
 
 <body>
-    <h1>Reporte general</h1>
+    <div class="title" style="display: flex;">
+        <h1>Reporte general</h1>
+        {{ $startDate }} - {{ $endDate }}
+    </div>
+
 
     <h3>Balance por cuentas</h3>
     <table>

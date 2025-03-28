@@ -11,21 +11,31 @@ use Illuminate\Support\Facades\DB;
 
 class ReportController extends Controller
 {
-    public function index()
+    public function index(Request $request)
     {
         $userUuid = Auth::user()->user_uuid;
-        $startOfMonth = Carbon::now()->startOfMonth()->toDateTimeString();
-        $endOfMonth = Carbon::now()->endOfMonth()->toDateTimeString();
+        $defaultStart = Carbon::now()->startOfMonth()->toDateString();
+        $defaultEnd = Carbon::now()->endOfMonth()->toDateString();
 
-        $accountsFinancials = $this->getAccountsFinancials($userUuid, $startOfMonth, $endOfMonth);
-        $groupedExpenses = $this->getGroupedExpenses($startOfMonth, $endOfMonth, $userUuid);
-        $groupedIncomes = $this->getGroupedIncomes($startOfMonth, $endOfMonth, $userUuid);
+        $startDate = $request->input('start_date');
+        if (empty($startDate)) {
+            $startDate = $defaultStart;
+        }
+
+        $endDate = $request->input('end_date');
+        if (empty($endDate)) {
+            $endDate = $defaultEnd;
+        }
+
+        $accountsFinancials = $this->getAccountsFinancials($userUuid, $startDate, $endDate);
+        $groupedExpenses = $this->getGroupedExpenses($startDate, $endDate, $userUuid);
+        $groupedIncomes = $this->getGroupedIncomes($startDate, $endDate, $userUuid);
         $accounts = $this->getUserAccounts($userUuid);
 
         // Map accounts
         $accountsMapping = $accounts->pluck('name', 'account_uuid')->toArray();
 
-        $transactions = $this->getTransactions($userUuid, $startOfMonth, $endOfMonth);
+        $transactions = $this->getTransactions($userUuid, $startDate, $endDate);
         $historicalBalances = $this->calculateHistoricalBalances($transactions, $accounts, $accountsMapping);
 
         $chartImageSrc = $this->generateChartImage($historicalBalances);
@@ -35,6 +45,8 @@ class ReportController extends Controller
             'grouped_incomes' => $groupedIncomes,
             'grouped_expenses' => $groupedExpenses,
             'chart' => $chartImageSrc,
+            'startDate' => $startDate,
+            'endDate' => $endDate
         ];
 
         $pdf = PDF::loadView('report.main', $data);
@@ -44,7 +56,7 @@ class ReportController extends Controller
     /**
      * Get balance by account
      */
-    private function getAccountsFinancials($userUuid, $startOfMonth, $endOfMonth)
+    private function getAccountsFinancials($userUuid, $startDate, $endDate)
     {
         return Account::select(
             'account.name',
@@ -55,7 +67,7 @@ class ReportController extends Controller
                     INNER JOIN expense ON expense.expense_uuid = user_expense.expense_uuid
                 WHERE user_account.account_uuid = account.account_uuid
                   AND user_account.user_uuid = "' . $userUuid . '"
-                  AND expense.created_at BETWEEN "' . $startOfMonth . '" AND "' . $endOfMonth . '"
+                  AND expense.created_at BETWEEN "' . $startDate . '" AND "' . $endDate . '"
             ), 0) as total_expense'),
             DB::raw('COALESCE((
                 SELECT SUM(income.amount)
@@ -64,7 +76,7 @@ class ReportController extends Controller
                     INNER JOIN income ON income.income_uuid = user_income.income_uuid
                 WHERE user_account.account_uuid = account.account_uuid
                   AND user_account.user_uuid = "' . $userUuid . '"
-                  AND income.created_at BETWEEN "' . $startOfMonth . '" AND "' . $endOfMonth . '"
+                  AND income.created_at BETWEEN "' . $startDate . '" AND "' . $endDate . '"
             ), 0) as total_income'),
             DB::raw('
                 COALESCE((
@@ -74,7 +86,7 @@ class ReportController extends Controller
                         INNER JOIN income ON income.income_uuid = user_income.income_uuid
                     WHERE user_account.account_uuid = account.account_uuid
                       AND user_account.user_uuid = "' . $userUuid . '"
-                      AND income.created_at BETWEEN "' . $startOfMonth . '" AND "' . $endOfMonth . '"
+                      AND income.created_at BETWEEN "' . $startDate . '" AND "' . $endDate . '"
                 ), 0)
                 -
                 COALESCE((
@@ -84,7 +96,7 @@ class ReportController extends Controller
                         INNER JOIN expense ON expense.expense_uuid = user_expense.expense_uuid
                     WHERE user_account.account_uuid = account.account_uuid
                       AND user_account.user_uuid = "' . $userUuid . '"
-                      AND expense.created_at BETWEEN "' . $startOfMonth . '" AND "' . $endOfMonth . '"
+                      AND expense.created_at BETWEEN "' . $startDate . '" AND "' . $endDate . '"
                 ), 0) as balance
             ')
         )->get();
@@ -94,12 +106,12 @@ class ReportController extends Controller
 ¿¿
      * Group expenses by type
      */
-    private function getGroupedExpenses($startOfMonth, $endOfMonth, $userUuid)
+    private function getGroupedExpenses($startDate, $endDate, $userUuid)
     {
         return DB::table('expense_type')
-            ->leftJoin('expense', function ($join) use ($startOfMonth, $endOfMonth) {
+            ->leftJoin('expense', function ($join) use ($startDate, $endDate) {
                 $join->on('expense_type.expense_type_uuid', '=', 'expense.expense_type_uuid')
-                    ->whereBetween('expense.created_at', [$startOfMonth, $endOfMonth]);
+                    ->whereBetween('expense.created_at', [$startDate, $endDate]);
             })
             ->leftJoin('user_expense', 'expense.expense_uuid', '=', 'user_expense.expense_uuid')
             ->leftJoin('user_account', function ($join) use ($userUuid) {
@@ -114,12 +126,12 @@ class ReportController extends Controller
     /**
      * Group incomes but type
      */
-    private function getGroupedIncomes($startOfMonth, $endOfMonth, $userUuid)
+    private function getGroupedIncomes($startDate, $endDate, $userUuid)
     {
         return DB::table('income_type')
-            ->leftJoin('income', function ($join) use ($startOfMonth, $endOfMonth) {
+            ->leftJoin('income', function ($join) use ($startDate, $endDate) {
                 $join->on('income_type.income_type_uuid', '=', 'income.income_type_uuid')
-                    ->whereBetween('income.created_at', [$startOfMonth, $endOfMonth]);
+                    ->whereBetween('income.created_at', [$startDate, $endDate]);
             })
             ->leftJoin('user_income', 'income.income_uuid', '=', 'user_income.income_uuid')
             ->leftJoin('user_account', function ($join) use ($userUuid) {
@@ -144,7 +156,7 @@ class ReportController extends Controller
     /**
      * Get transaction and info
      */
-    private function getTransactions($userUuid, $startOfMonth, $endOfMonth)
+    private function getTransactions($userUuid, $startDate, $endDate)
     {
         $query = "
             (SELECT i.amount, i.`date`, a.name, ua.account_uuid, 'ingreso' as tipo
@@ -166,11 +178,11 @@ class ReportController extends Controller
 
         return DB::select($query, [
             $userUuid,
-            $startOfMonth,
-            $endOfMonth,
+            $startDate,
+            $endDate,
             $userUuid,
-            $startOfMonth,
-            $endOfMonth
+            $startDate,
+            $endDate
         ]);
     }
 
@@ -280,7 +292,7 @@ class ReportController extends Controller
         $chartUrl = 'https://quickchart.io/chart?c=' . urlencode($jsonConfig);
         $imageData = base64_encode(file_get_contents($chartUrl));
 
-        return 'data:image/png;base64,' . $imageData;
+        return 'data:image/png;base64,';
     }
 
     private function generateColorFromAccountName($accountName)
