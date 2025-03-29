@@ -13,7 +13,7 @@
                         <th colspan="2" class="text-center">ENTRADAS</th>
                     </tr>
                     <tr>
-                        <th>Tipo</th>
+                        <th>Nombre</th>
                         <th>Monto</th>
                     </tr>
                 </thead>
@@ -40,7 +40,7 @@
                         <th colspan="2" class="text-center">SALIDAS</th>
                     </tr>
                     <tr>
-                        <th>Tipo</th>
+                        <th>Nombre</th>
                         <th>Monto</th>
                     </tr>
                 </thead>
