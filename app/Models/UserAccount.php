@@ -41,4 +41,14 @@ class UserAccount extends Model
     {
         return $this->belongsTo(Account::class, 'account_uuid', 'account_uuid');
     }
+    
+    public function userExpenses()
+    {
+        return $this->hasMany(UserExpense::class, 'user_account_uuid', 'user_account_uuid');
+    }
+ 
+    public function userIncomes()
+    {
+        return $this->hasMany(UserIncomes::class, 'user_account_uuid', 'user_account_uuid');
+    }
 }

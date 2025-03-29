@@ -8,6 +8,7 @@ use App\Http\Controllers\AccountController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\CategoryController;
 use App\Http\Controllers\ProfileController;
+use App\Http\Controllers\ReportController;
 use App\Http\Controllers\TwoFactorVerificationController;
 use Laravel\Fortify\Http\Controllers\TwoFactorAuthenticationController;
 use Laravel\Fortify\Http\Controllers\TwoFactorQrCodeController;
@@ -56,6 +57,8 @@ Route::middleware('auth')->group(function () {
     Route::resource('accounts', AccountController::class);
 
     Route::resource('categories', CategoryController::class);
+
+    Route::resource('report', ReportController::class);
 
     Route::get('/categories', [CategoryController::class, 'index'])->name('categories.index');
     Route::post('/categories/income', [CategoryController::class, 'storeIncomeType'])->name('categories.income.store');
