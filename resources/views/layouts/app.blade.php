@@ -73,7 +73,7 @@
     <main class="main-layout">
         @yield('content')
     </main>
-
+@stack('scripts')
 </body>
 <script src="{{ asset('js/layout.js') }}"></script>
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0/dist/js/bootstrap.bundle.min.js"></script>

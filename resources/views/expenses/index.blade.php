@@ -41,7 +41,7 @@
                     <td>{{ $expense->name }}</td>
                     <td>${{ number_format($expense->amount, 2, ".", ",") }}</td>
                     <td>{{ \Carbon\Carbon::parse($expense->date)->format('d/m/Y') }}</td>
-                    <td>{{ $expense->expenseType->name }}</td>
+                    <td>{{ $expense->expenseType->name ?? 'Sin tipo' }}</td>
                     <td>
                         @if($expense->ticket_path)
                         <img src="{{ asset('storage/' . $expense->ticket_path) }}"

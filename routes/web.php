@@ -47,6 +47,7 @@ Route::middleware('auth')->group(function () {
 */
     Route::get('/', [DashboardController::class, 'showReport'])->name('dashboard');
 
+    Route::get('/categories', [CategoryController::class, 'index'])->name('categories.index');
 
     Route::resource('incomes', IncomeController::class);
 
@@ -55,6 +56,15 @@ Route::middleware('auth')->group(function () {
     Route::resource('accounts', AccountController::class);
 
     Route::resource('categories', CategoryController::class);
+
+    Route::get('/categories', [CategoryController::class, 'index'])->name('categories.index');
+    Route::post('/categories/income', [CategoryController::class, 'storeIncomeType'])->name('categories.income.store');
+    Route::post('/categories/expense', [CategoryController::class, 'storeExpenseType'])->name('categories.expense.store');
+    Route::put('/categories/income/{id}', [CategoryController::class, 'updateIncomeType'])->name('categories.income.update');
+    Route::put('/categories/expense/{id}', [CategoryController::class, 'updateExpenseType'])->name('categories.expense.update');
+    Route::delete('/categories/income/{id}', [CategoryController::class, 'destroyIncomeType'])->name('categories.income.destroy');
+    Route::delete('/categories/expense/{id}', [CategoryController::class, 'destroyExpenseType'])->name('categories.expense.destroy');
+
 
     Route::get('/profile', [ProfileController::class, 'index'])->name('profile.index');
     Route::get('/profile/edit', [ProfileController::class, 'editIndex'])->name('profile.edit');

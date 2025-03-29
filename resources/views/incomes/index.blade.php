@@ -44,7 +44,7 @@
                     <td>{{ $income->name }}</td>
                     <td>${{ number_format($income->amount, 2, ".", ",") }}</td>
                     <td>{{ \Carbon\Carbon::parse($income->date)->format('d/m/Y') }}</td>
-                    <td>{{ $income->incomeType->name }}</td>
+                    <td>{{ $income->incomeType->name ?? 'Sin tipo'}}</td>
                     <td>
                         @if($income->ticket_path)
                        <img src="{{ asset('storage/' . $income->ticket_path) }}" class="thumbnail-img" style="max-height: 50px; cursor: pointer;" alt="Factura de ingreso">
