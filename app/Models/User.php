@@ -57,6 +57,6 @@ class User extends Authenticatable
 
     public function userIncomes()
     {
-        return $this->hasMany(UserIncome::class, 'user_uuid', 'user_uuid');
+        return $this->hasMany(userIncomes::class, 'user_uuid', 'user_uuid');
     }
 }
