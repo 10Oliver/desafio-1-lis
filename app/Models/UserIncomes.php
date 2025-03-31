@@ -5,7 +5,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
-class UserIncome extends Model
+class UserIncomes extends Model
 {
     use SoftDeletes;
 
@@ -17,14 +17,14 @@ class UserIncome extends Model
 
     protected $fillable = [
         'user_income_uuid',
-        'user_uuid',
+        'user_account_uuid',
         'income_uuid',
     ];
 
     // Relación N:1 con User
-    public function user()
+    public function userAccount()
     {
-        return $this->belongsTo(User::class, 'user_uuid', 'user_uuid');
+        return $this->belongsTo(UserAccount::class, 'user_account_uuid', 'user_account_uuid');
     }
 
     // Relación N:1 con Income

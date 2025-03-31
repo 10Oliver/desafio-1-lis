@@ -12,10 +12,16 @@
 
     <!-- Mensaje de éxito -->
     @if(session('success'))
-    <div class="alert alert-success mx-3">
-        {{ session('success') }}
-    </div>
+        <script>
+         Swal.fire({
+               icon: 'success',
+               title: 'Salida registrada',
+               text: "{{ session('success') }}",
+               confirmButtonColor: '#3085d6'
+          });
+        </script>
     @endif
+
 
     <!-- Tabla de salidas -->
     <div class="table-responsive">
@@ -35,7 +41,7 @@
                     <td>{{ $expense->name }}</td>
                     <td>${{ number_format($expense->amount, 2, ".", ",") }}</td>
                     <td>{{ \Carbon\Carbon::parse($expense->date)->format('d/m/Y') }}</td>
-                    <td>{{ $expense->expenseType->name }}</td>
+                    <td>{{ $expense->expenseType->name ?? 'Sin tipo' }}</td>
                     <td>
                         @if($expense->ticket_path)
                         <img src="{{ asset('storage/' . $expense->ticket_path) }}"
@@ -108,11 +114,13 @@
                 <div class="modal-body bg-dark">
                     <form action="{{ route('expenses.store') }}" method="POST" enctype="multipart/form-data" id="expenseForm">
                         @csrf
+
                         <!-- Nombre -->
                         <div class="mb-3">
                             <label for="name" class="form-label">Nombre de salida:</label>
                             <input type="text" name="name" id="name" class="form-control bg-dark text-white border border-secondary" required>
                         </div>
+
                         <!-- Tipo de salida -->
                         <div class="mb-3">
                             <label for="expense_type" class="form-label">Tipo de salida:</label>
@@ -123,6 +131,20 @@
                                 @endforeach
                             </select>
                         </div>
+
+                        <!-- Cuenta -->
+                        <div class="mb-3">
+                            <label for="user_account_uuid" class="form-label">Cuenta:</label>
+                            <select name="user_account_uuid" id="user_account_uuid" class="form-select bg-dark text-white border border-secondary" required>
+                                <option value="">Seleccione una cuenta</option>
+                                @foreach($userAccounts as $account)
+                                    <option value="{{ $account->user_account_uuid }}">
+                                        {{ $account->account->name }} - {{ $account->account->accountType->name ?? 'Sin tipo' }}
+                                    </option>
+                                @endforeach
+                            </select>
+                        </div>
+
                         <!-- Monto de salida -->
                         <div class="mb-3">
                             <label for="amount" class="form-label">Monto de salida:</label>
@@ -148,14 +170,15 @@
                             <button type="submit" class="btn btn-primary">Guardar</button>
                         </div>
                     </form>
-                    @if ($errors->any())
-                    <div class="alert alert-danger mt-3">
-                        <ul class="mb-0">
-                            @foreach($errors->all() as $error)
-                            <li>{{ $error }}</li>
-                            @endforeach
-                        </ul>
-                    </div>
+                    @if ($errors->has('amount'))
+                    <script>
+                        Swal.fire({
+                        icon: 'error',
+                        title: 'Error',
+                        text: '{{ $errors->first("amount") }}',
+                        confirmButtonColor: '#d33'
+                    });
+                    </script>
                     @endif
                 </div>
             </div>

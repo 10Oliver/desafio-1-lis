@@ -13,7 +13,7 @@
                         <th colspan="2" class="text-center">ENTRADAS</th>
                     </tr>
                     <tr>
-                        <th>Tipo</th>
+                        <th>Nombre</th>
                         <th>Monto</th>
                     </tr>
                 </thead>
@@ -40,7 +40,7 @@
                         <th colspan="2" class="text-center">SALIDAS</th>
                     </tr>
                     <tr>
-                        <th>Tipo</th>
+                        <th>Nombre</th>
                         <th>Monto</th>
                     </tr>
                 </thead>
@@ -69,6 +69,23 @@
             </div>
         </div>
     </div>
+    <form action="{{ route('report.index') }}" method="GET" target="_blank" class="d-flex flex-column align-items-center px-3 py-5">
+        <h4 class="mb-3 pb-5">Reporte general</h4>
+        <div class="row w-50">
+            <div class="col">
+                <label for="start_date" class="form-label">Fecha inicial</label>
+                <input type="date" name="start_date" id="start_date" class="form-control border border-secondary bg-dark text-white">
+            </div>
+            <div class="col">
+                <label for="end_date" class="form-label">Fecha final</label>
+                <input type="date" name="end_date" id="end_date" class="form-control border border-secondary bg-dark text-white">
+            </div>
+        </div>
+        <div class="row d-flex justify-content-center align-items-center w-100 mt-4">
+            <button type="submit" class="btn btn-secondary" style="max-width: max-content;">Generar PDF</button>
+        </div>
+    </form>
+
 </div>
 
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>

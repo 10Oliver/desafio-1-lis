@@ -2,63 +2,61 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\IncomeType;
+use App\Models\ExpenseType;
 use Illuminate\Http\Request;
+use Illuminate\Support\Str;
 
 class CategoryController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     */
     public function index()
     {
-        //
+        $incomeTypes = IncomeType::all();
+        $expenseTypes = ExpenseType::all();
+        return view('categories.index', compact('incomeTypes', 'expenseTypes'));
     }
 
-    /**
-     * Show the form for creating a new resource.
-     */
-    public function create()
+    public function storeIncomeType(Request $request)
     {
-        //
+        $request->validate(['name' => 'required|string|max:100']);
+        IncomeType::create(['income_type_uuid' => Str::uuid(), 'name' => $request->name]);
+        return redirect()->route('categories.index')->with('success', 'Categoría de ingreso creada.');
     }
 
-    /**
-     * Store a newly created resource in storage.
-     */
-    public function store(Request $request)
+    public function storeExpenseType(Request $request)
     {
-        //
+        $request->validate(['name' => 'required|string|max:100']);
+        ExpenseType::create(['expense_type_uuid' => Str::uuid(), 'name' => $request->name]);
+        return redirect()->route('categories.index')->with('success', 'Categoría de salida creada.');
     }
 
-    /**
-     * Display the specified resource.
-     */
-    public function show(string $id)
+    public function updateIncomeType(Request $request, $id)
     {
-        //
+        $request->validate(['name' => 'required|string|max:100']);
+        $type = IncomeType::findOrFail($id);
+        $type->update(['name' => $request->name]);
+        return redirect()->route('categories.index')->with('success', 'Categoría de ingreso actualizada.');
     }
 
-    /**
-     * Show the form for editing the specified resource.
-     */
-    public function edit(string $id)
+    public function updateExpenseType(Request $request, $id)
     {
-        //
+        $request->validate(['name' => 'required|string|max:100']);
+        $type = ExpenseType::findOrFail($id);
+        $type->update(['name' => $request->name]);
+        return redirect()->route('categories.index')->with('success', 'Categoría de salida actualizada.');
     }
 
-    /**
-     * Update the specified resource in storage.
-     */
-    public function update(Request $request, string $id)
+    public function destroyIncomeType($id)
     {
-        //
+        $type = IncomeType::findOrFail($id);
+        $type->delete();
+        return redirect()->route('categories.index')->with('success', 'Categoría de ingreso eliminada.');
     }
 
-    /**
-     * Remove the specified resource from storage.
-     */
-    public function destroy(string $id)
+    public function destroyExpenseType($id)
     {
-        //
+        $type = ExpenseType::findOrFail($id);
+        $type->delete();
+        return redirect()->route('categories.index')->with('success', 'Categoría de salida eliminada.');
     }
-}
+    }

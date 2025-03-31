@@ -6,12 +6,13 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="{{ asset('css/app.css') }}">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0/dist/css/bootstrap.min.css" rel="stylesheet">
-
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <title>Administrador</title>
+
 </head>
 
 <body>
-    
+
     <navbar class="mobile-navbar">
         <span class="material-symbols-outlined" id="navbar-menu-button">
             menu
@@ -22,7 +23,7 @@
             <img src="{{ asset('resources/images/user-layout.png') }}" alt="">
         </div>
         <div class="navigation-bar">
-            
+
 
              <a href="{{ route('incomes.index') }}" class="sidebar-icon">
                 <span class="material-symbols-outlined">savings</span>
@@ -67,12 +68,12 @@
 
         </div>
 
-        
+
     </aside>
     <main class="main-layout">
         @yield('content')
     </main>
-
+@stack('scripts')
 </body>
 <script src="{{ asset('js/layout.js') }}"></script>
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0/dist/js/bootstrap.bundle.min.js"></script>

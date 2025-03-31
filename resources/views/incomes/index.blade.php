@@ -12,10 +12,16 @@
 
     <!-- Mensaje de éxito -->
     @if(session('success'))
-    <div class="alert alert-success mx-3">
-        {{ session('success') }}
-    </div>
+        <script>
+            Swal.fire({
+             icon: 'success',
+             title: 'Ingreso registrado',
+                text: "{{ session('success') }}",
+                confirmButtonColor: '#3085d6'
+         });
+        </script>
     @endif
+
 
     <!-- Tabla de ingresos -->
     <div class="table-responsive">
@@ -38,7 +44,7 @@
                     <td>{{ $income->name }}</td>
                     <td>${{ number_format($income->amount, 2, ".", ",") }}</td>
                     <td>{{ \Carbon\Carbon::parse($income->date)->format('d/m/Y') }}</td>
-                    <td>{{ $income->incomeType->name }}</td>
+                    <td>{{ $income->incomeType->name ?? 'Sin tipo'}}</td>
                     <td>
                         @if($income->ticket_path)
                        <img src="{{ asset('storage/' . $income->ticket_path) }}" class="thumbnail-img" style="max-height: 50px; cursor: pointer;" alt="Factura de ingreso">
@@ -108,11 +114,14 @@
                 <div class="modal-body bg-dark">
                     <form action="{{ route('incomes.store') }}" method="POST" enctype="multipart/form-data" id="incomeForm">
                         @csrf
+
+                         <!-- Nombre -->
                         <div class="mb-3">
                             <label for="name" class="form-label bg-dark text-white">Nombre:</label>
                             <input type="text" name="name" id="name" class="form-control bg-dark text-white border border-secondary" required>
 
-                            <div class="mb-3">
+                            <!-- Tipo de ingreso -->
+                            <div class="mb-3 mt-3">
                                 <label for="income_type" class="form-label">Tipo de ingreso:</label>
                                 <select name="income_type" id="income_type" class="form-select bg-dark text-white border border-secondary" required>
                                     <option value="">Seleccione un tipo</option>
@@ -122,21 +131,38 @@
                                 </select>
                             </div>
 
+                            <!-- Cuenta -->
+                            <div class="mb-3">
+                                <label for="user_account_uuid" class="form-label">Cuenta:</label>
+                                <select name="user_account_uuid" id="user_account_uuid" class="form-select bg-dark text-white border border-secondary" required>
+                                    <option value="">Seleccione una cuenta</option>
+                                @foreach($userAccounts as $account)
+                                    <option value="{{ $account->user_account_uuid }}">
+                                 {{ $account->account->name }} - {{ $account->account->accountType->name ?? 'Sin tipo' }}
+                                    </option>
+                                @endforeach
+                                </select>
+                            </div>
+
+                            <!-- Monto de ingreso -->
                             <div class="mb-3">
                                 <label for="amount" class="form-label">Monto:</label>
                                 <input type="number" step="0.01" name="amount" id="amount" class="form-control bg-dark text-white border border-secondary" required>
                             </div>
 
+                            <!-- Fecha de ingreso -->
                             <div class="mb-3">
                                 <label for="date" class="form-label">Fecha:</label>
                                 <input type="date" name="date" id="date" class="form-control bg-dark text-white border border-secondary" required>
                             </div>
 
+                            <!-- Factura de ingreso (imagen) -->
                             <div class="mb-3">
                                 <label for="ticket" class="form-label">Factura (imagen):</label>
                                 <input type="file" name="ticket" id="ticket" class="form-control bg-dark text-white border border-secondary" accept="image/*">
                             </div>
 
+                            <!-- Descripción -->
                             <div class="mb-3">
                                 <label for="description" class="form-label">Descripción (opcional):</label>
                                 <textarea name="description" id="description" class="form-control bg-dark text-white border border-secondary" rows="3"></textarea>

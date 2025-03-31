@@ -26,7 +26,7 @@ class RegisterSecondStepRequest extends FormRequest
     {
         return [
             'email' => 'required|email|unique:user,email',
-            'phone' => 'required|numeric|max:250',
+            'phone' => 'required|string|max:250',
             'password' => ['required', 'confirmed', 'regex:/^(?=.*[a-z])(?=.*[A-Z]).+$/', Password::min(8)->numbers()->symbols()->uncompromised()],
         ];
     }
@@ -54,7 +54,6 @@ class RegisterSecondStepRequest extends FormRequest
 
             'phone.required' => 'Campo obligatorio.',
             'phone.regex' => 'Formato incorrecto (0000-0000)',
-            'phone.numeric' => 'Solo se permiten números',
             'phone.max' => 'Máximo 250 caracteres',
 
             'nationality.required' => 'Campo obligatorio.',
