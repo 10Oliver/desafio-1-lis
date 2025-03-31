@@ -8,16 +8,26 @@ use App\Models\Expense;
 
 class DashboardController extends Controller
 {
-    public function showReport()
+    public function showReport(Request $request)
     {
-    $incomes = Income::with('incomeType')->get();
-    $expenses = Expense::with('expenseType')->get();
+        $selectedMonth = $request->get('month');
 
-    $totalIncome = $incomes->sum('amount');
-    $totalExpense = $expenses->sum('amount');
-    $balance = $totalIncome - $totalExpense;
+        if ($selectedMonth) {
+            $incomes = Income::with('incomeType')
+                ->whereMonth('created_at', $selectedMonth)
+                ->get();
+            $expenses = Expense::with('expenseType')
+                ->whereMonth('created_at', $selectedMonth)
+                ->get();
+        } else {
+            $incomes = Income::with('incomeType')->get();
+            $expenses = Expense::with('expenseType')->get();
+        }
 
-    return view('dashboard', compact('incomes', 'expenses', 'totalIncome', 'totalExpense', 'balance'));
+        $totalIncome = $incomes->sum('amount');
+        $totalExpense = $expenses->sum('amount');
+        $balance = $totalIncome - $totalExpense;
+
+        return view('dashboard', compact('incomes', 'expenses', 'totalIncome', 'totalExpense', 'balance'));
     }
-
 }
